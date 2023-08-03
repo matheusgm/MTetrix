@@ -64,7 +64,7 @@ public:
 
 	virtual void updateMousePositions();
 	virtual void updateKeytime(const float& dt);
-	virtual void updateInput(const float& dt) = 0;
+	virtual void updateKeyboardInput(sf::Event& sfEvent) = 0;
 	virtual void updateEvents(sf::Event& sfEvent) = 0;
 	virtual void onResizeWindow() = 0;
 	virtual void update(const float& dt) = 0;

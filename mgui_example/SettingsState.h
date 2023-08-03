@@ -31,7 +31,7 @@ public:
     // Accessors
 
     // Functions
-    void updateInput(const float& dt);
+    void updateKeyboardInput(sf::Event& sfEvent);
     void updateEvents(sf::Event& sfEvent);
     void onResizeWindow();
     void updateGui(const float& dt);

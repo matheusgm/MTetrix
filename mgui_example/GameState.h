@@ -34,7 +34,7 @@ public:
 
     // Functions
     void updateView(const float& dt);
-    void updateInput(const float& dt);
+    void updateKeyboardInput(sf::Event& sfEvent);
     void onResizeWindow();
     void updateEvents(sf::Event& sfEvent);
     void updatePlayerInput(const float& dt);

@@ -22,7 +22,7 @@ public:
     virtual ~MainMenuState();
 
     // Functions
-    void updateInput(const float& dt);
+    void updateKeyboardInput(sf::Event& sfEvent);
     void updateEvents(sf::Event& sfEvent);
     void onResizeWindow();
     void updateGui();

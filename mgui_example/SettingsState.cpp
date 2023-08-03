@@ -99,13 +99,14 @@ SettingsState::~SettingsState()
 
 // Functions
 
-void SettingsState::updateInput(const float& dt)
+void SettingsState::updateKeyboardInput(sf::Event& sfEvent)
 {
 
 }
 
 void SettingsState::updateEvents(sf::Event& sfEvent)
 {
+	this->updateKeyboardInput(sfEvent);
 	for (auto& it : this->buttons) {
 		it.second->updateEvents(sfEvent, this->mousePosView);
 	}
@@ -153,7 +154,6 @@ void SettingsState::updateGui(const float& dt)
 void SettingsState::update(const float& dt)
 {
 	this->updateMousePositions();
-	this->updateInput(dt);
 
 	this->updateGui(dt);
 }

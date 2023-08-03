@@ -14,16 +14,21 @@ private:
 
 	std::map<std::string, gui::Button*> buttons;
 
+	// Functions
+	void initButtons();
+
 public:
 	PauseMenu(sf::RenderWindow& window, sf::Font& font);
 	virtual ~PauseMenu();
 
 	// Accessor
 	std::map<std::string, gui::Button*>& getButtons();
+	gui::Button* getButton(std::string key);
+
+	// Modifier
+	void setPosition(const float x, const float y);
 
 	// Functions
-	const bool isButtonPressed(const std::string key);
-	void addButton(const std::string key, float y, const std::string text, std::function<void()> onPressed);
 	void onResizeWindow(sf::RenderWindow& new_window);
 	void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos);
 	void update(const sf::Vector2f& mousePos);

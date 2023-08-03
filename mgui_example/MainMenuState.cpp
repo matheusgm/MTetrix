@@ -73,13 +73,14 @@ MainMenuState::~MainMenuState()
 }
 
 
-void MainMenuState::updateInput(const float& dt)
+void MainMenuState::updateKeyboardInput(sf::Event& sfEvent)
 {
 
 }
 
 void MainMenuState::updateEvents(sf::Event& sfEvent)
 {
+	this->updateKeyboardInput(sfEvent);
 	for (auto& it : this->buttons) {
 		it.second->updateEvents(sfEvent, this->mousePosView);
 	}
@@ -118,7 +119,6 @@ void MainMenuState::updateGui()
 void MainMenuState::update(const float& dt)
 {
 	this->updateMousePositions();
-	this->updateInput(dt);
 
 	this->updateGui();
 }
