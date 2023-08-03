@@ -40,7 +40,8 @@ void GameState::initPauseMenu()
 {
 	this->pmenu = new PauseMenu(*this->window, this->font);
 
-	this->pmenu->addButton("QUIT", 200.f, "Quit");
+	this->pmenu->addButton("QUIT", 200.f, "Quit", [this] {this->endState(); });
+
 }
 
 void GameState::initPlayers()
@@ -109,6 +110,7 @@ void GameState::onResizeWindow()
 
 void GameState::updateEvents(sf::Event& sfEvent)
 {
+	this->pmenu->updateEvents(sfEvent, this->mousePosView);
 }
 
 void GameState::updatePlayerInput(const float& dt)
@@ -131,9 +133,6 @@ void GameState::updatePlayerInput(const float& dt)
 
 void GameState::updatePauseMenuButtons()
 {
-	if (this->pmenu->isButtonPressed("QUIT")) {
-		this->endState();
-	}
 }
 
 void GameState::update(const float& dt)

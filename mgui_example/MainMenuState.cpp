@@ -36,6 +36,21 @@ void MainMenuState::initGui()
 		250.f, 50.f,
 		&this->font, "Quit", 32);
 
+	// New Game
+	this->buttons["GAME_STATE"]->onPressed([this] {
+		this->states->push(new GameState(this->stateData));
+		});
+
+	// Settings
+	this->buttons["SETTINGS_STATE"]->onPressed([this] {
+		this->states->push(new SettingsState(this->stateData));
+		});
+
+	// Quit the game
+	this->buttons["EXIT_STATE"]->onPressed([this] {
+		this->endState();
+		});
+
 }
 
 MainMenuState::MainMenuState(StateData* state_data) 
@@ -65,6 +80,9 @@ void MainMenuState::updateInput(const float& dt)
 
 void MainMenuState::updateEvents(sf::Event& sfEvent)
 {
+	for (auto& it : this->buttons) {
+		it.second->updateEvents(sfEvent, this->mousePosView);
+	}
 }
 
 void MainMenuState::onResizeWindow()
@@ -94,21 +112,6 @@ void MainMenuState::updateGui()
 	/* Updates all the buttons in the state and handles their functionality */
 	for (auto& it : this->buttons) {
 		it.second->update(this->mousePosView);
-	}
-
-	// New Game
-	if (this->buttons["GAME_STATE"]->isPressed()) {
-		this->states->push(new GameState(this->stateData));
-	}
-
-	// Settings
-	if (this->buttons["SETTINGS_STATE"]->isPressed()) {
-		this->states->push(new SettingsState(this->stateData));
-	}
-
-	// Quit the game
-	if (this->buttons["EXIT_STATE"]->isPressed()) {
-		this->endState();
 	}
 }
 

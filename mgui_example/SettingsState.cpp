@@ -35,6 +35,20 @@ void SettingsState::initGui()
 		150.f, 50.f,
 		&this->font, "Apply", 32);
 
+	// Button functionality
+	// Quit the game
+	this->buttons["BACK"]->onPressed([this] {
+		this->endState();
+	});
+
+	// Apply selected settings
+	this->buttons["APPLY"]->onPressed([this] {
+
+		// TEST REMOVE LATER
+		//this->window->create(this->stateData->gfxSettings->resolution, this->stateData->gfxSettings->title, sf::Style::Default);
+
+		});
+
 	/*std::vector<std::string> modes_str;
 	for (auto& i : this->modes) {
 		modes_str.push_back(std::to_string(i.width) + 'x' + std::to_string(i.height));
@@ -92,6 +106,9 @@ void SettingsState::updateInput(const float& dt)
 
 void SettingsState::updateEvents(sf::Event& sfEvent)
 {
+	for (auto& it : this->buttons) {
+		it.second->updateEvents(sfEvent, this->mousePosView);
+	}
 	this->soundSlider->updateEvents(sfEvent, this->mousePosView);
 }
 
@@ -129,20 +146,6 @@ void SettingsState::updateGui(const float& dt)
 	for (auto& it : this->buttons) {
 		it.second->update(this->mousePosView);
 	}
-	// Button functionality
-	// Quit the game
-	if (this->buttons["BACK"]->isPressed()) {
-		this->endState();
-	}
-
-	// Apply selected settings
-	if (this->buttons["APPLY"]->isPressed()) {
-		
-		// TEST REMOVE LATER
-		//this->window->create(this->stateData->gfxSettings->resolution, this->stateData->gfxSettings->title, sf::Style::Default);
-	
-	}
-
 	this->soundSlider->update(this->mousePosView);
 
 }

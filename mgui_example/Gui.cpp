@@ -10,6 +10,8 @@ gui::Button::Button(float x, float y, float width, float height,
 {
 	this->buttonState = NORMAL;
 	this->id = id;
+	this->onPressedCallback = [] {};
+	this->buttonPressed = false;
 
 	// Font
 	this->font = font;
@@ -134,28 +136,55 @@ void gui::Button::setDisabled(const bool disable)
 		this->buttonState = NORMAL;
 }
 
+void gui::Button::onPressed(std::function<void()> callback)
+{
+	this->onPressedCallback = callback;
+}
+
 // Functions
 
-void gui::Button::update(const sf::Vector2f& mousePos)
+void gui::Button::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 {
-	// Update the booleans for hover and pressed
-
 	// Disabled
 	if (this->buttonState != DISABLED) {
 		// Idle
 		this->buttonState = NORMAL;
-
 		// Hover
 		if (this->shape.getGlobalBounds().contains(mousePos)) {
 			this->buttonState = HOVER;
-
 			// Pressed
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			if (sfEvent.type == sf::Event::MouseButtonPressed)
+			{
+				if (sfEvent.mouseButton.button == sf::Mouse::Left)
+				{
+					this->buttonPressed = true;
+				}
+			}
+			if(this->buttonPressed)
 				this->buttonState = PRESSED;
+		}
+		if (this->buttonPressed)
+		{
+			if (sfEvent.type == sf::Event::MouseButtonReleased)
+			{
+				this->buttonPressed = false;
+				if (this->shape.getGlobalBounds().contains(mousePos))
+				{
+					this->buttonState = HOVER;
+					if (sfEvent.mouseButton.button == sf::Mouse::Left)
+					{
+						this->buttonState = NORMAL;
+						this->onPressedCallback();
+					}
+				}
 			}
 		}
 	}
-	
+}
+
+void gui::Button::update(const sf::Vector2f& mousePos)
+{
+	// Update the booleans for hover and pressed
 
 	switch (this->buttonState)
 	{
@@ -191,7 +220,6 @@ void gui::Button::update(const sf::Vector2f& mousePos)
 void gui::Button::render(sf::RenderTarget& target)
 {
 	target.draw(this->shape);
-	//target.draw(this->shapeText);
 	target.draw(this->text);
 }
 

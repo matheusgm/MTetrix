@@ -23,8 +23,9 @@ public:
 
 	// Functions
 	const bool isButtonPressed(const std::string key);
-	void addButton(const std::string key, float y, const std::string text);
+	void addButton(const std::string key, float y, const std::string text, std::function<void()> onPressed);
 	void onResizeWindow(sf::RenderWindow& new_window);
+	void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos);
 	void update(const sf::Vector2f& mousePos);
 	void render(sf::RenderTarget& target);
 

@@ -37,7 +37,7 @@ const bool PauseMenu::isButtonPressed(const std::string key)
 }
 
 
-void PauseMenu::addButton(const std::string key, float y, const std::string text)
+void PauseMenu::addButton(const std::string key, float y, const std::string text, std::function<void()> onPressed)
 {
 	float gap = 50.f;
 	float width = this->container.getSize().x - 2*gap;
@@ -47,6 +47,7 @@ void PauseMenu::addButton(const std::string key, float y, const std::string text
 		x, y,
 		width, height,
 		&this->font, text, 32);
+	this->buttons[key]->onPressed(onPressed);
 }
 
 void PauseMenu::onResizeWindow(sf::RenderWindow& new_window)
@@ -82,6 +83,13 @@ void PauseMenu::onResizeWindow(sf::RenderWindow& new_window)
 	for (auto& it : this->buttons) {
 		it.second->setSize(this->container.getSize().x - (2 * gap), 50.f);
 		it.second->setPosition(this->container.getPosition().x + (this->container.getSize().x / 2.f) - (it.second->getSize().x / 2.f), it.second->getPosition().y);
+	}
+}
+
+void PauseMenu::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
+{
+	for (auto& it : this->buttons) {
+		it.second->updateEvents(sfEvent, mousePos);
 	}
 }
 
