@@ -171,7 +171,7 @@ void GameState::shapeActionFinished()
 
 GameState::GameState(StateData* state_data) : State(state_data)
 {
-	srand(time(0));
+	srand(static_cast<unsigned int>(time(0)));
 	this->initKeybinds();
 	this->initFonts();
 	this->initTexture();
