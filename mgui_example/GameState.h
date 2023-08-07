@@ -3,6 +3,7 @@
 
 #include "State.h"
 #include "PauseMenu.h"
+#include "TetrixShape.h"
 
 class PauseMenu;
 class Player;
@@ -21,12 +22,31 @@ private:
 
     Player* player;
 
+    // Tetrix Variables
+    sf::RectangleShape gridArea;
+    int squareSize;
+    int rows;
+    int columns;
+
+    sf::Texture squaresTexture;
+    TetrixShape* tShape;
+    TetrixSquare*** squaresMatrix;
+
     // Functions
     void initDeferredRender();
     void initKeybinds();
     void initTexture();
     void initPauseMenu();
+    void initVariables();
     void initPlayers();
+
+    // Tetrix Functions
+    void initSquareMatrix();
+    bool checkBottom();
+    bool checkOverlap();
+    int checkLeftSide();
+    int checkRightSide();
+    void shapeActionFinished();
 
 public:
     GameState(StateData* state_data);
@@ -37,9 +57,9 @@ public:
     void updateKeyboardInput(sf::Event& sfEvent);
     void onResizeWindow();
     void updateEvents(sf::Event& sfEvent);
-    void updatePlayerInput(const float& dt);
     void updatePauseMenuButtons();
     void update(const float& dt);
+    void renderSquareMatrix(sf::RenderTarget& target);
     void render(sf::RenderTarget* target = nullptr);
 };
 #endif

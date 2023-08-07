@@ -145,6 +145,8 @@
     <ClInclude Include="SettingsState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TetrixShape.h" />
+    <ClInclude Include="TetrixSquare.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationComponent.cpp" />
@@ -164,6 +166,8 @@
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TetrixShape.cpp" />
+    <ClCompile Include="TetrixSquare.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
