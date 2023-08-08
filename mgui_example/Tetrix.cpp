@@ -5,7 +5,7 @@
 void Tetrix::initVariables()
 {
 	this->gridArea.setPosition(sf::Vector2f(100.f, 100.f));
-	this->gridArea.setFillColor(sf::Color::Color(200, 0, 200, 255));
+	this->gridArea.setFillColor(sf::Color::Black);
 	this->gridArea.setOutlineThickness(1.f);
 	this->gridArea.setOutlineColor(sf::Color::Black);
 	this->gridArea.setSize(sf::Vector2f(
@@ -17,7 +17,8 @@ void Tetrix::initVariables()
 void Tetrix::initShape()
 {
 	this->tShape = new TetrixShape(
-		this->gridArea.getPosition().x, this->gridArea.getPosition().y,
+		this->gridArea.getPosition().x + this->gridArea.getSize().x/2.f - this->squareSize,
+		this->gridArea.getPosition().y - (2*this->squareSize),
 		this->squareSize, this->squaresTexture, 0, 0, 128, 128, shapes::L
 	);
 }
@@ -42,7 +43,8 @@ bool Tetrix::checkOverlap()
 	{
 		j = ts->getRelativeSquareTile(this->gridArea.getPosition()).x;
 		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
-		if (this->squaresMatrix[i][j] != NULL) return true;
+		if (i >= 0 and i < this->rows and j >= 0 and j < this->columns)
+			if (this->squaresMatrix[i][j] != NULL) return true;
 	}
 	return false;
 }
@@ -123,7 +125,8 @@ void Tetrix::shapeActionFinished()
 	int color = rand() % 4;
 
 	this->tShape = new TetrixShape(
-		this->gridArea.getPosition().x, this->gridArea.getPosition().y,
+		this->gridArea.getPosition().x + this->gridArea.getSize().x / 2.f - this->squareSize,
+		this->gridArea.getPosition().y - (2 * this->squareSize),
 		this->squareSize, this->squaresTexture, color / 2, color % 2, 128, 128, static_cast<shapes>(shape)
 	);
 
@@ -136,6 +139,9 @@ Tetrix::Tetrix(sf::Texture squaresTexture, int rows, int columns, int squareSize
 	this->initSquareMatrix();
 	this->initVariables();
 	this->initShape();
+
+	this->elapsed_time = sf::seconds(0.f);
+	this->delta_time = sf::seconds(0.5f);
 }
 
 Tetrix::~Tetrix()
@@ -154,6 +160,17 @@ Tetrix::~Tetrix()
 		}
 	}
 	delete[] this->squaresMatrix;
+}
+
+void Tetrix::resetTimer()
+{
+	this->elapsed_time = sf::seconds(0.f);
+}
+
+
+void Tetrix::restartTimer()
+{
+	this->clock.restart();
 }
 
 void Tetrix::moveShapeDown()
@@ -310,6 +327,13 @@ void Tetrix::onResizeWindow(sf::RenderWindow& new_window)
 
 void Tetrix::update(const float& dt)
 {
+	this->elapsed_time += this->clock.restart();
+	if (this->elapsed_time >= this->delta_time) // Tempo atingiu 1 segundo (delta time)
+	{
+		this->moveShapeDown();
+		this->elapsed_time -= this->delta_time;
+	}
+
 	this->tShape->update(dt);
 }
 

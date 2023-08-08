@@ -18,6 +18,10 @@ private:
 	int rows;
 	int columns;
 
+	sf::Clock clock;
+	sf::Time elapsed_time;
+	sf::Time delta_time;
+
 	sf::Texture squaresTexture;
 	TetrixShape* tShape;
 	TetrixSquare*** squaresMatrix;
@@ -33,6 +37,9 @@ private:
 public:
 	Tetrix(sf::Texture squaresTexture, int rows = 20, int columns = 10, int squareSize = 20);
 	virtual ~Tetrix();
+
+	void resetTimer();
+	void restartTimer();
 
 	// Movement Functions
 	void moveShapeDown();

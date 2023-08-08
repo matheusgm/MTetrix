@@ -97,6 +97,7 @@ void GameState::updateKeyboardInput(sf::Event& sfEvent)
 			}
 			else {
 				this->unpauseState();
+				this->tetrix->restartTimer();
 			}
 		}
 
@@ -113,6 +114,7 @@ void GameState::updateKeyboardInput(sf::Event& sfEvent)
 		}
 		if (sfEvent.key.code == sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))) {
 			this->tetrix->moveShapeDown();
+			this->tetrix->resetTimer();
 		}
 	}
 }
