@@ -145,6 +145,7 @@
     <ClInclude Include="SettingsState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Tetrix.h" />
     <ClInclude Include="TetrixShape.h" />
     <ClInclude Include="TetrixSquare.h" />
   </ItemGroup>
@@ -166,6 +167,7 @@
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Tetrix.cpp" />
     <ClCompile Include="TetrixShape.cpp" />
     <ClCompile Include="TetrixSquare.cpp" />
   </ItemGroup>

@@ -49,7 +49,7 @@ TetrixShape::TetrixShape(float x, float y, int square_size,
 
 	// Top Left of 5
 	this->rotationPoint = sf::Vector2f(x + square_size, y + (2 * square_size));
-	this->setPosition(sf::Vector2f(x, y));
+	this->position = sf::Vector2f(x, y);
 }
 
 TetrixShape::~TetrixShape()
@@ -77,15 +77,21 @@ const std::vector<TetrixSquare*> TetrixShape::getSquares()
 
 void TetrixShape::setPosition(sf::Vector2f position)
 {
+	sf::Vector2f diff = position - this->getPosition();
+	for (auto& s : this->squares)
+	{
+		s->setPosition(s->getPosition().x + diff.x, s->getPosition().y + diff.y);
+	}
 	this->position = position;
+	this->rotationPoint = sf::Vector2f(this->position.x + this->squareSize, this->position.y + (2 * this->squareSize));
 }
 
 void TetrixShape::move(const float x, const float y)
 {
-	this->setPosition(sf::Vector2f(
+	this->position = sf::Vector2f(
 		this->getPosition().x + x * this->squareSize,
 		this->getPosition().y + y * this->squareSize
-	));
+	);
 	this->rotationPoint += sf::Vector2f(x * this->squareSize, y * this->squareSize);
 	for (auto& s : this->squares)
 	{

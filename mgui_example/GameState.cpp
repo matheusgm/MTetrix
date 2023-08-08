@@ -48,125 +48,12 @@ void GameState::initPauseMenu()
 
 void GameState::initVariables()
 {
-	this->squareSize = 20;
-	this->rows = 20;
-	this->columns = 10;
-	this->squaresTexture = this->textures["TETRIX_SQUARES_SHEET"];
-	this->gridArea.setFillColor(sf::Color::Color(200, 0, 200, 255));
-	this->gridArea.setOutlineThickness(1.f);
-	this->gridArea.setOutlineColor(sf::Color::Black);
-	this->gridArea.setSize(sf::Vector2f(
-		static_cast<float>(this->squareSize * this->columns),
-		static_cast<float>(this->squareSize * this->rows)
-	));
+
 }
 
 void GameState::initPlayers()
 {
-	this->player = new Player(0,0, this->textures["PLAYER_SHEET"]);
-	this->tShape = new TetrixShape(
-		this->gridArea.getPosition().x, this->gridArea.getPosition().y,
-		this->squareSize, this->squaresTexture, 0, 0, 128, 128, shapes::L
-	);
-}
-
-void GameState::initSquareMatrix()
-{
-	this->squaresMatrix = new TetrixSquare * *[this->rows] {NULL};
-	for (int i = 0; i < this->rows; i++)
-	{
-		this->squaresMatrix[i] = new TetrixSquare * [this->columns] {NULL};
-	}
-
-}
-
-bool GameState::checkBottom()
-{
-	std::vector<TetrixSquare*> squares = this->tShape->getSquares();
-	sf::Vector2f gridStart = this->gridArea.getPosition();
-	int i = 0;
-	for (auto& ts : squares)
-	{
-		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
-		if (i == this->rows) return true;
-	}
-	return false;
-}
-
-bool GameState::checkOverlap()
-{
-	std::vector<TetrixSquare*> squares = this->tShape->getSquares();
-	sf::Vector2f gridStart = this->gridArea.getPosition();
-	int i = 0;
-	int j = 0;
-	for (auto& ts : squares)
-	{
-		j = ts->getRelativeSquareTile(this->gridArea.getPosition()).x;
-		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
-		if (this->squaresMatrix[i][j] != NULL) return true;
-	}
-	return false;
-}
-
-int GameState::checkLeftSide()
-{
-	int j = 0;
-	int maxX = 0;
-	for (auto& s : this->tShape->getSquares())
-	{
-		j = s->getRelativeSquareTile(this->gridArea.getPosition()).x;
-		if (j < 0) // Algum quadrado ficou fora
-		{
-			if (j < maxX) maxX = j;
-		}
-	}
-	return maxX;
-}
-
-int GameState::checkRightSide()
-{
-	int j = 0;
-	int maxX = 0;
-	for (auto& s : this->tShape->getSquares())
-	{
-		j = s->getRelativeSquareTile(this->gridArea.getPosition()).x;
-		if (j > this->columns - 1) // Algum quadrado ficou fora
-		{
-			if ((j - (this->columns - 1)) > maxX) maxX = (j - (this->columns - 1));
-		}
-	}
-	return maxX;
-}
-
-void GameState::shapeActionFinished()
-{
-	// Put squares in Matrix
-	std::vector<TetrixSquare*> squares = this->tShape->getSquares();
-	int i = 0;
-	int j = 0;
-	for (auto* ts : squares)
-	{
-		j = ts->getRelativeSquareTile(this->gridArea.getPosition()).x;
-		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
-		if (ts)
-		{
-			this->squaresMatrix[i][j] = new TetrixSquare(*ts);
-		}
-	}
-
-	// TODO - Verify if is not game over
-
-	// Generate a new shape
-	delete this->tShape;
-
-	int shape = rand() % SHAPES_SIZE;
-	int color = rand() % 4;
-
-	this->tShape = new TetrixShape(
-		this->gridArea.getPosition().x, this->gridArea.getPosition().y,
-		this->squareSize, this->squaresTexture, color/2, color%2, 128, 128, static_cast<shapes>(shape)
-	);
-
+	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
 }
 
 GameState::GameState(StateData* state_data) : State(state_data)
@@ -178,10 +65,11 @@ GameState::GameState(StateData* state_data) : State(state_data)
 	this->initPauseMenu();
 	this->initVariables();
 
-	this->onResizeWindow();
-
-	this->initSquareMatrix();
 	this->initPlayers();
+
+	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"]);
+
+	this->onResizeWindow();
 
 	this->background.setFillColor(sf::Color::Yellow);
 }
@@ -190,20 +78,7 @@ GameState::~GameState()
 {
 	delete this->pmenu;
 	delete this->player;
-	delete this->tShape;
-
-	if (this->squaresMatrix)
-	{
-		for (int i = 0; i < this->rows; i++)
-		{
-			for (int j = 0; j < this->columns; j++)
-			{
-				delete this->squaresMatrix[i][j];
-			}
-			delete[] this->squaresMatrix[i];
-		}
-	}
-	delete[] this->squaresMatrix;
+	delete this->tetrix;
 }
 
 void GameState::updateView(const float& dt)
@@ -227,69 +102,17 @@ void GameState::updateKeyboardInput(sf::Event& sfEvent)
 
 		// Update player input
 		if (sfEvent.key.code ==  sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) {
-			this->tShape->move(-1.f, 0.f);
-			int left = this->checkLeftSide();
-			bool overlap = false;
-			if (left == 0) overlap = this->checkOverlap();
-			if (overlap || left != 0) this->tShape->move(1.f, 0.f);
+			this->tetrix->moveShapeLeft();
 		}
 		if (sfEvent.key.code == sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))) {
-			this->tShape->move(1.f, 0.f);
-			int right = this->checkRightSide();
-			bool overlap = false;
-			if (right == 0) overlap = this->checkOverlap();
-			if (overlap || right != 0) this->tShape->move(-1.f, 0.f);
+			this->tetrix->moveShapeRight();
 		}
 		if (sfEvent.key.code == sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))) {
-			// Rotate Left
-			this->tShape->rotate(90.f);
-			int right = this->checkRightSide();
-			int left = this->checkLeftSide();
-			bool overlap = false;
-			if (left != 0)
-			{
-				this->tShape->move(static_cast<float>(-left), 0.f);
-				overlap = this->checkOverlap();
-				if (overlap)
-				{
-					this->tShape->move(static_cast<float>(left), 0.f);
-					this->tShape->rotate(-90.f);
-				}
-			}
-			else if (right != 0)
-			{
-				this->tShape->move(static_cast<float>(-right), 0.f);
-				overlap = this->checkOverlap();
-				if (overlap)
-				{
-					this->tShape->move(static_cast<float>(right), 0.f);
-					this->tShape->rotate(-90.f);
-				}
-			}
-			else
-			{
-				overlap = this->checkOverlap();
-				if (overlap)
-				{
-					this->tShape->rotate(-90.f);
-				}
-			}
-				
-
+			// Rotate
+			this->tetrix->rotateShape(90.f);
 		}
 		if (sfEvent.key.code == sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))) {
-			this->tShape->move(0.f, 1.f);
-			
-			bool bottom = this->checkBottom();
-			bool overlap = false;
-			if (!bottom) {
-				overlap = this->checkOverlap();
-			}
-			if (overlap || bottom)
-			{
-				this->tShape->move(0.f, -1.f);
-				this->shapeActionFinished();
-			}
+			this->tetrix->moveShapeDown();
 		}
 	}
 }
@@ -314,10 +137,7 @@ void GameState::onResizeWindow()
 		)
 	);
 
-	this->gridArea.setPosition(sf::Vector2f(
-		this->window->getSize().x/2.f - this->gridArea.getSize().x/2.f,
-		this->window->getSize().y/2.f - this->gridArea.getSize().y/2.f
-	));
+	this->tetrix->onResizeWindow(*this->window);
 
 	this->pmenu->onResizeWindow(*this->window);
 }
@@ -344,25 +164,11 @@ void GameState::update(const float& dt)
 		this->updateView(dt);
 
 		this->player->update(dt);
-		this->tShape->update(dt);
+		this->tetrix->update(dt);
 	}
 	else { // Paused update
 		this->pmenu->update(this->mousePosView);
 		this->updatePauseMenuButtons();
-	}
-}
-
-void GameState::renderSquareMatrix(sf::RenderTarget& target)
-{
-	if (!this->squaresMatrix) return;
-
-	for (int i = 0; i < this->rows; i++)
-	{
-		for (int j = 0; j < this->columns; j++)
-		{
-			if (!this->squaresMatrix[i][j]) continue;
-			this->squaresMatrix[i][j]->render(target);
-		}
 	}
 }
 
@@ -376,11 +182,8 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderTexture.draw(this->background);
 	
 	this->player->render(this->renderTexture);
-
-	this->renderTexture.draw(this->gridArea);
-	this->tShape->render(this->renderTexture);
 	
-	this->renderSquareMatrix(this->renderTexture);
+	this->tetrix->render(this->renderTexture);
 
 	if (this->paused) { // Pause menu render
 		this->pmenu->render(this->renderTexture);
