@@ -67,7 +67,7 @@ GameState::GameState(StateData* state_data) : State(state_data)
 
 	this->initPlayers();
 
-	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"]);
+	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"], 20, 10, 30);
 
 	this->onResizeWindow();
 

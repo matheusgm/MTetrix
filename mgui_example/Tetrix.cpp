@@ -85,17 +85,34 @@ void Tetrix::shapeActionFinished()
 {
 	// Put squares in Matrix
 	std::vector<TetrixSquare*> squares = this->tShape->getSquares();
+	std::set<int> linesToCheck = {};
+	std::vector<int> linesCompleted = {};
 	int i = 0;
 	int j = 0;
+
+	// Put the Squares of the Shape in the correct position of the Matrix
 	for (auto* ts : squares)
 	{
 		j = ts->getRelativeSquareTile(this->gridArea.getPosition()).x;
 		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
+		linesToCheck.insert(i);
 		if (ts)
 		{
 			this->squaresMatrix[i][j] = new TetrixSquare(*ts);
 		}
 	}
+
+	// Analyse only the lines of the new Squares in the Matrix
+	for (auto& l : linesToCheck)
+	{
+		if (this->isLineFullComplete(l)) linesCompleted.push_back(l);
+	}
+
+	// Eliminate the completed lines and increment the pontuation
+	this->eliminateCompletedLines(linesCompleted);
+
+	// Update position of line above the completed lines
+	this->updateMatrixAfterCompletedLines(linesCompleted);
 
 	// TODO - Verify if is not game over
 
@@ -216,6 +233,54 @@ void Tetrix::rotateShape(const float angle)
 		{
 			this->tShape->rotate(-angle);
 		}
+	}
+}
+
+bool Tetrix::isLineFullComplete(int line)
+{
+	bool line_completed = true;
+	for (int j = 0; j < this->columns; j++)
+	{
+		if (this->squaresMatrix[line][j] == NULL) line_completed = false;
+	}
+	return line_completed;
+}
+
+void Tetrix::eliminateCompletedLines(std::vector<int> linesCompleted)
+{
+	for (auto& line : linesCompleted)
+	{
+		for (int j = 0; j < this->columns; j++)
+		{
+			delete this->squaresMatrix[line][j];
+			this->squaresMatrix[line][j] = NULL;
+		}
+	}
+	
+}
+
+void Tetrix::updateMatrixAfterCompletedLines(std::vector<int> linesCompleted)
+{
+	TetrixSquare** aux;
+	// Para cada linha completa e eliminada, deslocar em uma unidade as linhas de cima.
+	std::sort(linesCompleted.begin(), linesCompleted.end());
+	for (auto& line : linesCompleted)
+	{
+		if (line > 0)
+		{
+			for (int i = line - 1; i >= 0; i--)
+			{
+				aux = this->squaresMatrix[i + 1];
+				this->squaresMatrix[i + 1] = this->squaresMatrix[i];
+				this->squaresMatrix[i] = aux;
+				for (int j = 0; j < this->columns; j++)
+				{
+					if(this->squaresMatrix[i + 1][j] != NULL)
+						this->squaresMatrix[i + 1][j]->move(0.f, this->squareSize);
+				}
+			}
+		}
+		
 	}
 }
 

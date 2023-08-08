@@ -41,6 +41,9 @@ public:
 	void rotateShape(const float angle);
 
 	// Functions
+	bool isLineFullComplete(int line);
+	void eliminateCompletedLines(std::vector<int> linesCompleted);
+	void updateMatrixAfterCompletedLines(std::vector<int> linesCompleted);
 	void onResizeWindow(sf::RenderWindow& new_window);
 	void update(const float& dt);
 	void renderSquareMatrix(sf::RenderTarget& target);
