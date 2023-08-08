@@ -3,6 +3,13 @@
 
 #include "TetrixShape.h"
 
+struct collide
+{
+	int left;
+	int right;
+	int bottom;
+};
+
 class Tetrix
 {
 private:
@@ -20,9 +27,7 @@ private:
 	void initShape();
 	void initSquareMatrix();
 	bool checkOverlap();
-	int checkBottom();
-	int checkLeftSide();
-	int checkRightSide();
+	collide checkCollide();
 	void shapeActionFinished();
 
 public:

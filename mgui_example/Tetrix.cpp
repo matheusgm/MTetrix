@@ -47,49 +47,38 @@ bool Tetrix::checkOverlap()
 	return false;
 }
 
-int Tetrix::checkBottom()
+collide Tetrix::checkCollide()
 {
 	int i = 0;
+	int j = 0;
 	int maxY = 0;
-	for (auto& ts : this->tShape->getSquares())
+	int maxX = 0;
+	collide detection;
+	for (auto& s : this->tShape->getSquares())
 	{
-		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
-		if (i > this->rows - 1) // Algum quadrado ficou fora
+		i = s->getRelativeSquareTile(this->gridArea.getPosition()).y;
+		j = s->getRelativeSquareTile(this->gridArea.getPosition()).x;
+		if (j > this->columns - 1) // Algum quadrado ficou fora do lado direito
+		{
+			if ((j - (this->columns - 1)) > maxX) maxX = (j - (this->columns - 1));
+		}
+		else if (j < 0) // Algum quadrado ficou fora do lado esquerdo
+		{
+			if (j < maxX) maxX = j;
+		}
+		if (i > this->rows - 1) // Algum quadrado ficou fora em baixo
 		{
 			if ((i - (this->rows - 1)) > maxY) maxY = (i - (this->rows - 1));
 		}
 	}
-	return maxY;
-}
 
-int Tetrix::checkLeftSide()
-{
-	int j = 0;
-	int maxX = 0;
-	for (auto& s : this->tShape->getSquares())
-	{
-		j = s->getRelativeSquareTile(this->gridArea.getPosition()).x;
-		if (j < 0) // Algum quadrado ficou fora
-		{
-			if (j < maxX) maxX = j;
-		}
-	}
-	return maxX;
-}
-
-int Tetrix::checkRightSide()
-{
-	int j = 0;
-	int maxX = 0;
-	for (auto& s : this->tShape->getSquares())
-	{
-		j = s->getRelativeSquareTile(this->gridArea.getPosition()).x;
-		if (j > this->columns - 1) // Algum quadrado ficou fora
-		{
-			if ((j - (this->columns - 1)) > maxX) maxX = (j - (this->columns - 1));
-		}
-	}
-	return maxX;
+	detection.bottom = maxY;
+	detection.left = 0;
+	detection.right = 0;
+	if (maxX > 0) detection.right = maxX;
+	else if (maxX < 0) detection.left = maxX;
+	
+	return detection;
 }
 
 void Tetrix::shapeActionFinished()
@@ -154,7 +143,7 @@ void Tetrix::moveShapeDown()
 {
 	this->tShape->move(0.f, 1.f);
 
-	int bottom = this->checkBottom();
+	int bottom = this->checkCollide().bottom;
 	bool overlap = false;
 	if (bottom == 0)  overlap = this->checkOverlap();
 	if (overlap || bottom != 0)
@@ -167,7 +156,7 @@ void Tetrix::moveShapeDown()
 void Tetrix::moveShapeLeft()
 {
 	this->tShape->move(-1.f, 0.f);
-	int left = this->checkLeftSide();
+	int left = this->checkCollide().left;
 	bool overlap = false;
 	if (left == 0) overlap = this->checkOverlap();
 	if (overlap || left != 0) this->tShape->move(1.f, 0.f);
@@ -176,7 +165,7 @@ void Tetrix::moveShapeLeft()
 void Tetrix::moveShapeRight()
 {
 	this->tShape->move(1.f, 0.f);
-	int right = this->checkRightSide();
+	int right = this->checkCollide().right;
 	bool overlap = false;
 	if (right == 0) overlap = this->checkOverlap();
 	if (overlap || right != 0) this->tShape->move(-1.f, 0.f);
@@ -185,9 +174,10 @@ void Tetrix::moveShapeRight()
 void Tetrix::rotateShape(const float angle)
 {
 	this->tShape->rotate(angle);
-	int right = this->checkRightSide();
-	int left = this->checkLeftSide();
-	int bottom = this->checkBottom();
+	collide detect = this->checkCollide();
+	int right = detect.right;
+	int left = detect.left;
+	int bottom = detect.bottom;
 	bool overlap = false;
 	if (left != 0)
 	{
@@ -231,14 +221,26 @@ void Tetrix::rotateShape(const float angle)
 
 void Tetrix::onResizeWindow(sf::RenderWindow& new_window)
 {
+	sf::Vector2f diffShapeGridArea = this->tShape->getPosition() - this->gridArea.getPosition();
+
 	this->gridArea.setPosition(sf::Vector2f(
 		new_window.getSize().x / 2.f - this->gridArea.getSize().x / 2.f,
 		new_window.getSize().y / 2.f - this->gridArea.getSize().y / 2.f
 	));
-	this->tShape->setPosition(sf::Vector2f(
-		this->gridArea.getPosition().x,
-		this->gridArea.getPosition().y
-	));
+
+	this->tShape->setPosition(this->gridArea.getPosition() + diffShapeGridArea);
+
+	for (int i = 0; i < this->rows; i++)
+	{
+		for (int j = 0; j < this->columns; j++)
+		{
+			if (this->squaresMatrix[i][j] != NULL)
+				this->squaresMatrix[i][j]->setPosition(
+					this->gridArea.getPosition().x + j * this->squareSize,
+					this->gridArea.getPosition().y + i * this->squareSize
+				);
+		}
+	}
 }
 
 void Tetrix::update(const float& dt)
