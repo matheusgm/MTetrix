@@ -101,13 +101,27 @@ void TetrixShape::move(const float x, const float y)
 
 void TetrixShape::rotate(const float angle)
 {
+	float old_center_x, old_center_y;
+	float new_rect_center_x, new_rect_center_y;
+	int diff_x, diff_y;
+
 	sf::Transform t;
 	t.rotate(angle, this->getRotationPoint().x, this->getRotationPoint().y);
 
 	for (auto& s : this->squares)
 	{
 		sf::FloatRect new_rect = t.transformRect(s->getGlobalBounds());
-		s->setPosition(round(new_rect.left), round(new_rect.top));
+
+		old_center_x = s->getPosition().x + s->getGlobalBounds().getSize().x / 2.f;
+		old_center_y = s->getPosition().y + s->getGlobalBounds().getSize().y / 2.f;
+		
+		new_rect_center_x = new_rect.left + new_rect.width / 2.f;
+		new_rect_center_y = new_rect.top + new_rect.height / 2.f;
+
+		diff_x = static_cast<int>(round(new_rect_center_x - old_center_x));
+		diff_y = static_cast<int>(round(new_rect_center_y - old_center_y));
+
+		s->move(diff_x, diff_y);
 	}
 }
 

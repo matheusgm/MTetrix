@@ -16,10 +16,14 @@ void Tetrix::initVariables()
 
 void Tetrix::initShape()
 {
+	int shape = rand() % SHAPES_SIZE;
+	//int shape = 2;
+	int color = rand() % 4;
+
 	this->tShape = new TetrixShape(
-		this->gridArea.getPosition().x + this->gridArea.getSize().x/2.f - this->squareSize,
-		this->gridArea.getPosition().y - (2*this->squareSize),
-		this->squareSize, this->squaresTexture, 0, 0, 128, 128, shapes::L
+		this->gridArea.getPosition().x + floor(this->columns / 2.f)*this->squareSize,
+		this->gridArea.getPosition().y - (2 * this->squareSize),
+		this->squareSize, this->squaresTexture, color / 2, color % 2, 128, 128, static_cast<shapes>(shape)
 	);
 }
 
@@ -35,11 +39,10 @@ void Tetrix::initSquareMatrix()
 
 bool Tetrix::checkOverlap()
 {
-	std::vector<TetrixSquare*> squares = this->tShape->getSquares();
 	sf::Vector2f gridStart = this->gridArea.getPosition();
 	int i = 0;
 	int j = 0;
-	for (auto& ts : squares)
+	for (auto& ts : this->tShape->getSquares())
 	{
 		j = ts->getRelativeSquareTile(this->gridArea.getPosition()).x;
 		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
@@ -121,14 +124,7 @@ void Tetrix::shapeActionFinished()
 	// Generate a new shape
 	delete this->tShape;
 
-	int shape = rand() % SHAPES_SIZE;
-	int color = rand() % 4;
-
-	this->tShape = new TetrixShape(
-		this->gridArea.getPosition().x + this->gridArea.getSize().x / 2.f - this->squareSize,
-		this->gridArea.getPosition().y - (2 * this->squareSize),
-		this->squareSize, this->squaresTexture, color / 2, color % 2, 128, 128, static_cast<shapes>(shape)
-	);
+	this->initShape();
 
 }
 
