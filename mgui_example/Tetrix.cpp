@@ -4,6 +4,9 @@
 
 void Tetrix::initVariables()
 {
+	this->score = 0;
+	this->linesCleared = 0;
+
 	this->gridArea.setPosition(sf::Vector2f(100.f, 100.f));
 	this->gridArea.setFillColor(sf::Color::Black);
 	this->gridArea.setOutlineThickness(1.f);
@@ -17,7 +20,6 @@ void Tetrix::initVariables()
 void Tetrix::initShape()
 {
 	int shape = rand() % SHAPES_SIZE;
-	//int shape = 2;
 	int color = rand() % 4;
 
 	this->tShape = new TetrixShape(
@@ -89,14 +91,13 @@ collide Tetrix::checkCollide()
 void Tetrix::shapeActionFinished()
 {
 	// Put squares in Matrix
-	std::vector<TetrixSquare*> squares = this->tShape->getSquares();
 	std::set<int> linesToCheck = {};
 	std::vector<int> linesCompleted = {};
 	int i = 0;
 	int j = 0;
 
 	// Put the Squares of the Shape in the correct position of the Matrix
-	for (auto* ts : squares)
+	for (auto* ts : this->tShape->getSquares())
 	{
 		j = ts->getRelativeSquareTile(this->gridArea.getPosition()).x;
 		i = ts->getRelativeSquareTile(this->gridArea.getPosition()).y;
@@ -118,6 +119,10 @@ void Tetrix::shapeActionFinished()
 
 	// Update position of line above the completed lines
 	this->updateMatrixAfterCompletedLines(linesCompleted);
+
+	// Increment Points
+	this->linesCleared += linesCompleted.size();
+	this->score += this->calculateScore(linesCompleted.size());
 
 	// TODO - Verify if is not game over
 
@@ -158,6 +163,24 @@ Tetrix::~Tetrix()
 	delete[] this->squaresMatrix;
 }
 
+int Tetrix::calculateScore(int lines_cleared)
+{
+	int level = this->getLevel();
+	switch (lines_cleared)
+	{
+	case 1:
+		return 40 * level;
+	case 2 :
+		return 100 * level;
+	case 3:
+		return 300 * level;
+	case 4:
+		return 1200 * level;
+	default:
+		return 0;
+	}
+}
+
 void Tetrix::resetTimer()
 {
 	this->elapsed_time = sf::seconds(0.f);
@@ -168,6 +191,12 @@ void Tetrix::restartTimer()
 {
 	this->clock.restart();
 }
+
+int Tetrix::getLevel()
+{
+	return  static_cast<int>(floor(this->linesCleared / 10)) + 1;
+}
+
 
 void Tetrix::moveShapeDown()
 {
@@ -289,7 +318,7 @@ void Tetrix::updateMatrixAfterCompletedLines(std::vector<int> linesCompleted)
 				for (int j = 0; j < this->columns; j++)
 				{
 					if(this->squaresMatrix[i + 1][j] != NULL)
-						this->squaresMatrix[i + 1][j]->move(0.f, this->squareSize);
+						this->squaresMatrix[i + 1][j]->move(0.f, static_cast<float>(this->squareSize));
 				}
 			}
 		}

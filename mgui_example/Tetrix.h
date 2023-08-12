@@ -26,6 +26,9 @@ private:
 	TetrixShape* tShape;
 	TetrixSquare*** squaresMatrix;
 
+	int score;
+	int linesCleared; // Level = 1 level a cada 10 lines cleared
+
 	// Functions
 	void initVariables();
 	void initShape();
@@ -33,6 +36,7 @@ private:
 	bool checkOverlap();
 	collide checkCollide();
 	void shapeActionFinished();
+	int calculateScore(int lines_cleared);
 
 public:
 	Tetrix(sf::Texture squaresTexture, int rows = 20, int columns = 10, int squareSize = 20);
@@ -40,6 +44,8 @@ public:
 
 	void resetTimer();
 	void restartTimer();
+
+	int getLevel();
 
 	// Movement Functions
 	void moveShapeDown();
