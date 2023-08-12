@@ -23,6 +23,9 @@ private:
     Player* player;
     Tetrix* tetrix;
 
+    sf::Text tetrixScore;
+    sf::Text tetrixLevel;
+
     // Functions
     void initDeferredRender();
     void initKeybinds();

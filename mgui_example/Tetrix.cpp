@@ -133,7 +133,6 @@ void Tetrix::shapeActionFinished()
 
 }
 
-
 Tetrix::Tetrix(sf::Texture squaresTexture, int rows, int columns, int squareSize)
 	: squaresTexture(squaresTexture), rows(rows), columns(columns), squareSize(squareSize)
 {
@@ -186,7 +185,6 @@ void Tetrix::resetTimer()
 	this->elapsed_time = sf::seconds(0.f);
 }
 
-
 void Tetrix::restartTimer()
 {
 	this->clock.restart();
@@ -197,6 +195,10 @@ int Tetrix::getLevel()
 	return  static_cast<int>(floor(this->linesCleared / 10)) + 1;
 }
 
+int Tetrix::getScore()
+{
+	return this->score;
+}
 
 void Tetrix::moveShapeDown()
 {

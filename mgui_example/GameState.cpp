@@ -48,7 +48,19 @@ void GameState::initPauseMenu()
 
 void GameState::initVariables()
 {
+	this->background.setFillColor(sf::Color::Yellow);
 
+	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"], 20, 10, 20);
+
+	this->tetrixLevel.setFont(this->font);
+	this->tetrixLevel.setCharacterSize(30u);
+	this->tetrixLevel.setFillColor(sf::Color::Black);
+	this->tetrixLevel.setString(std::to_string(this->tetrix->getLevel()));
+	
+	this->tetrixScore.setFont(this->font);
+	this->tetrixScore.setCharacterSize(30u);
+	this->tetrixScore.setFillColor(sf::Color::Black);
+	this->tetrixScore.setString(std::to_string(this->tetrix->getScore()));
 }
 
 void GameState::initPlayers()
@@ -67,11 +79,7 @@ GameState::GameState(StateData* state_data) : State(state_data)
 
 	this->initPlayers();
 
-	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"], 20, 10, 20);
-
 	this->onResizeWindow();
-
-	this->background.setFillColor(sf::Color::Yellow);
 }
 
 GameState::~GameState()
@@ -139,6 +147,23 @@ void GameState::onResizeWindow()
 		)
 	);
 
+	this->tetrixLevel.setPosition(
+		sf::Vector2f(
+			this->window->getSize().x / 4.f - this->tetrixLevel.getGlobalBounds().getSize().x / 2.f,
+			this->window->getSize().y / 2.f - this->tetrixLevel.getGlobalBounds().getSize().y
+		)
+	);
+
+	this->tetrixScore.setPosition(
+		sf::Vector2f(
+			this->window->getSize().x / 4.f - this->tetrixScore.getGlobalBounds().getSize().x / 2.f,
+			this->window->getSize().y / 2.f + this->tetrixScore.getGlobalBounds().getSize().y
+		)
+	);
+
+	std::cout << this->tetrixLevel.getGlobalBounds().width << " - " << this->tetrixLevel.getGlobalBounds().height << std::endl;
+	std::cout << this->tetrixScore.getGlobalBounds().width << " - " << this->tetrixScore.getGlobalBounds().height << std::endl;
+
 	this->tetrix->onResizeWindow(*this->window);
 
 	this->pmenu->onResizeWindow(*this->window);
@@ -167,6 +192,10 @@ void GameState::update(const float& dt)
 
 		this->player->update(dt);
 		this->tetrix->update(dt);
+
+		// REDO
+		this->tetrixLevel.setString(std::to_string(this->tetrix->getLevel()));
+		this->tetrixScore.setString(std::to_string(this->tetrix->getScore()));
 	}
 	else { // Paused update
 		this->pmenu->update(this->mousePosView);
@@ -186,6 +215,9 @@ void GameState::render(sf::RenderTarget* target)
 	this->player->render(this->renderTexture);
 	
 	this->tetrix->render(this->renderTexture);
+
+	this->renderTexture.draw(this->tetrixLevel);
+	this->renderTexture.draw(this->tetrixScore);
 
 	if (this->paused) { // Pause menu render
 		this->pmenu->render(this->renderTexture);

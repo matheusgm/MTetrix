@@ -46,6 +46,7 @@ public:
 	void restartTimer();
 
 	int getLevel();
+	int getScore();
 
 	// Movement Functions
 	void moveShapeDown();
