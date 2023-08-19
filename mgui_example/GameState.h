@@ -23,8 +23,10 @@ private:
     Player* player;
     Tetrix* tetrix;
 
-    sf::Text tetrixScore;
-    sf::Text tetrixLevel;
+    sf::Text tetrixScoreLabel;
+    sf::Text tetrixScoreValue;
+    sf::Text tetrixLevelLabel;
+    sf::Text tetrixLevelValue;
 
     // Functions
     void initDeferredRender();

@@ -38,6 +38,8 @@ TetrixShape::TetrixShape(float x, float y, int square_size,
 		break;
 	}
 
+	float upperRow = 4;
+
 	for (auto& i : squares_position)
 	{
 		int column = i % 2;
@@ -45,11 +47,13 @@ TetrixShape::TetrixShape(float x, float y, int square_size,
 		this->squares.push_back(
 			new TetrixSquare(x + column * square_size, y + row * square_size, square_size, texture, start_frame_x, start_frame_y, width, height)
 		);
+		if (row < upperRow) upperRow = row;
 	}
 
 	// Top Left of 5
 	this->rotationPoint = sf::Vector2f(x + square_size, y + (2 * square_size));
 	this->position = sf::Vector2f(x, y);
+	if (upperRow * square_size > 0) this->move(0, -upperRow);
 }
 
 TetrixShape::~TetrixShape()

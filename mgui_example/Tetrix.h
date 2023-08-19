@@ -28,6 +28,7 @@ private:
 
 	int score;
 	int linesCleared; // Level = 1 level a cada 10 lines cleared
+	bool gameOver;
 
 	// Functions
 	void initVariables();
@@ -47,6 +48,7 @@ public:
 
 	int getLevel();
 	int getScore();
+	sf::Vector2f getPosition();
 
 	// Movement Functions
 	void moveShapeDown();

@@ -6,6 +6,7 @@ void Tetrix::initVariables()
 {
 	this->score = 0;
 	this->linesCleared = 0;
+	this->gameOver = false;
 
 	this->gridArea.setPosition(sf::Vector2f(100.f, 100.f));
 	this->gridArea.setFillColor(sf::Color::Black);
@@ -24,7 +25,7 @@ void Tetrix::initShape()
 
 	this->tShape = new TetrixShape(
 		this->gridArea.getPosition().x + floor(this->columns / 2.f)*this->squareSize,
-		this->gridArea.getPosition().y - (2 * this->squareSize),
+		this->gridArea.getPosition().y,
 		this->squareSize, this->squaresTexture, color / 2, color % 2, 128, 128, static_cast<shapes>(shape)
 	);
 }
@@ -124,12 +125,16 @@ void Tetrix::shapeActionFinished()
 	this->linesCleared += linesCompleted.size();
 	this->score += this->calculateScore(linesCompleted.size());
 
-	// TODO - Verify if is not game over
-
 	// Generate a new shape
 	delete this->tShape;
 
 	this->initShape();
+
+	//Verify if is not game over
+	if (this->checkOverlap())
+	{
+		this->gameOver = true;
+	}
 
 }
 
@@ -146,7 +151,8 @@ Tetrix::Tetrix(sf::Texture squaresTexture, int rows, int columns, int squareSize
 
 Tetrix::~Tetrix()
 {
-	delete this->tShape;
+	if (this->tShape)
+		delete this->tShape;
 
 	if (this->squaresMatrix)
 	{
@@ -202,6 +208,8 @@ int Tetrix::getScore()
 
 void Tetrix::moveShapeDown()
 {
+	if (this->gameOver) return;
+
 	this->tShape->move(0.f, 1.f);
 
 	int bottom = this->checkCollide().bottom;
@@ -216,6 +224,8 @@ void Tetrix::moveShapeDown()
 
 void Tetrix::moveShapeLeft()
 {
+	if (this->gameOver) return;
+
 	this->tShape->move(-1.f, 0.f);
 	int left = this->checkCollide().left;
 	bool overlap = false;
@@ -225,6 +235,8 @@ void Tetrix::moveShapeLeft()
 
 void Tetrix::moveShapeRight()
 {
+	if (this->gameOver) return;
+
 	this->tShape->move(1.f, 0.f);
 	int right = this->checkCollide().right;
 	bool overlap = false;
@@ -234,6 +246,8 @@ void Tetrix::moveShapeRight()
 
 void Tetrix::rotateShape(const float angle)
 {
+	if (this->gameOver) return;
+
 	this->tShape->rotate(angle);
 	collide detect = this->checkCollide();
 	int right = detect.right;
@@ -328,6 +342,11 @@ void Tetrix::updateMatrixAfterCompletedLines(std::vector<int> linesCompleted)
 	}
 }
 
+sf::Vector2f Tetrix::getPosition()
+{
+	return this->gridArea.getPosition();
+}
+
 void Tetrix::onResizeWindow(sf::RenderWindow& new_window)
 {
 	sf::Vector2f diffShapeGridArea = this->tShape->getPosition() - this->gridArea.getPosition();
@@ -354,6 +373,8 @@ void Tetrix::onResizeWindow(sf::RenderWindow& new_window)
 
 void Tetrix::update(const float& dt)
 {
+	if (this->gameOver) return;
+
 	this->elapsed_time += this->clock.restart();
 	if (this->elapsed_time >= this->delta_time) // Tempo atingiu 1 segundo (delta time)
 	{
