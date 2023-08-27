@@ -42,15 +42,14 @@ void GameState::initTexture()
 void GameState::initPauseMenu()
 {
 	this->pmenu = new PauseMenu(*this->window, this->font);
+	this->pmenu->addButton("QUIT", "Quit");
+	this->pmenu->addButton("Teste", "teste");
 	this->pmenu->getButton("QUIT")->onPressed([this]{this->endState(); });
-
 }
 
 void GameState::initVariables()
 {
 	this->background.setFillColor(sf::Color::Yellow);
-
-	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"], 20, 10, 30);
 
 	this->tetrixLevelLabel.setFont(this->font);
 	this->tetrixLevelLabel.setCharacterSize(30u);
@@ -60,7 +59,7 @@ void GameState::initVariables()
 	this->tetrixLevelValue.setFont(this->font);
 	this->tetrixLevelValue.setCharacterSize(30u);
 	this->tetrixLevelValue.setFillColor(sf::Color::Black);
-	this->tetrixLevelValue.setString(std::to_string(this->tetrix->getLevel()));
+	
 
 	this->tetrixScoreLabel.setFont(this->font);
 	this->tetrixScoreLabel.setCharacterSize(30u);
@@ -70,12 +69,21 @@ void GameState::initVariables()
 	this->tetrixScoreValue.setFont(this->font);
 	this->tetrixScoreValue.setCharacterSize(30u);
 	this->tetrixScoreValue.setFillColor(sf::Color::Black);
-	this->tetrixScoreValue.setString(std::to_string(this->tetrix->getScore()));
 }
 
 void GameState::initPlayers()
 {
 	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
+}
+
+void GameState::initGameoverMenu()
+{
+	this->gameovermenu = new GameMenu(*this->window, this->font, "Game Over");
+	this->gameovermenu->addButton("QUIT", "Quit");
+	this->gameovermenu->addButton("RESTART", "Restart");
+	this->gameovermenu->getButton("RESTART")->onPressed([this] {this->initGame(); });
+	this->gameovermenu->getButton("QUIT")->onPressed([this] {this->endState(); });
+	this->gameovermenu->onResizeWindow(*this->window);
 }
 
 GameState::GameState(StateData* state_data) : State(state_data)
@@ -89,14 +97,29 @@ GameState::GameState(StateData* state_data) : State(state_data)
 
 	this->initPlayers();
 
+	this->initGame();
+
 	this->onResizeWindow();
 }
 
 GameState::~GameState()
 {
 	delete this->pmenu;
+	delete this->gameovermenu;
 	delete this->player;
 	delete this->tetrix;
+}
+
+void GameState::initGame()
+{
+	this->gameovermenu = NULL;
+	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"], 20, 10, 30);
+	this->tetrix->onGameover([this] { this->initGameoverMenu(); });
+
+	this->tetrixLevelValue.setString(std::to_string(this->tetrix->getLevel()));
+	this->tetrixScoreValue.setString(std::to_string(this->tetrix->getScore()));
+
+	this->tetrix->onResizeWindow(*this->window);
 }
 
 void GameState::updateView(const float& dt)
@@ -110,12 +133,15 @@ void GameState::updateKeyboardInput(sf::Event& sfEvent)
 	{
 		if (sfEvent.key.code == sf::Keyboard::Key(this->keybinds.at("CLOSE")))
 		{
-			if (!this->paused) {
-				this->pauseState();
-			}
-			else {
-				this->unpauseState();
-				this->tetrix->restartTimer();
+			if (!this->gameovermenu)
+			{
+				if (!this->paused) {
+					this->pauseState();
+				}
+				else {
+					this->unpauseState();
+					this->tetrix->restartTimer();
+				}
 			}
 		}
 
@@ -160,6 +186,8 @@ void GameState::onResizeWindow()
 	this->tetrix->onResizeWindow(*this->window);
 
 	this->pmenu->onResizeWindow(*this->window);
+	if(this->gameovermenu)
+		this->gameovermenu->onResizeWindow(*this->window);
 
 	this->tetrixLevelLabel.setPosition(
 		sf::Vector2f(
@@ -198,6 +226,8 @@ void GameState::updateEvents(sf::Event& sfEvent)
 	if (this->paused) {
 		this->pmenu->updateEvents(sfEvent, this->mousePosView);
 	}
+	if(this->gameovermenu)
+		this->gameovermenu->updateEvents(sfEvent, this->mousePosView);
 }
 
 void GameState::updatePauseMenuButtons()
@@ -224,6 +254,9 @@ void GameState::update(const float& dt)
 		this->pmenu->update(this->mousePosView);
 		this->updatePauseMenuButtons();
 	}
+
+	if (this->gameovermenu)
+		this->gameovermenu->update(this->mousePosView);
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -247,6 +280,9 @@ void GameState::render(sf::RenderTarget* target)
 	if (this->paused) { // Pause menu render
 		this->pmenu->render(this->renderTexture);
 	}
+
+	if (this->gameovermenu)
+		this->gameovermenu->render(this->renderTexture);
 	
 	// FINAL RENDER
 	this->renderTexture.display();

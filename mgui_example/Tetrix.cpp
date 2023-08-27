@@ -7,6 +7,7 @@ void Tetrix::initVariables()
 	this->score = 0;
 	this->linesCleared = 0;
 	this->gameOver = false;
+	this->onGameoverCallback = [] {};
 
 	this->gridArea.setPosition(sf::Vector2f(100.f, 100.f));
 	this->gridArea.setFillColor(sf::Color::Black);
@@ -134,6 +135,7 @@ void Tetrix::shapeActionFinished()
 	if (this->checkOverlap())
 	{
 		this->gameOver = true;
+		this->onGameoverCallback();
 	}
 
 }
@@ -302,6 +304,11 @@ bool Tetrix::isLineFullComplete(int line)
 		if (this->squaresMatrix[line][j] == NULL) line_completed = false;
 	}
 	return line_completed;
+}
+
+void Tetrix::onGameover(std::function<void()> callback)
+{
+	this->onGameoverCallback = callback;
 }
 
 void Tetrix::eliminateCompletedLines(std::vector<int> linesCompleted)

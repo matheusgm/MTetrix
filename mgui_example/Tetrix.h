@@ -22,6 +22,8 @@ private:
 	sf::Time elapsed_time;
 	sf::Time delta_time;
 
+	std::function<void()> onGameoverCallback;
+
 	sf::Texture squaresTexture;
 	TetrixShape* tShape;
 	TetrixSquare*** squaresMatrix;
@@ -58,6 +60,7 @@ public:
 
 	// Functions
 	bool isLineFullComplete(int line);
+	void onGameover(std::function<void()> callback);
 	void eliminateCompletedLines(std::vector<int> linesCompleted);
 	void updateMatrixAfterCompletedLines(std::vector<int> linesCompleted);
 	void onResizeWindow(sf::RenderWindow& new_window);

@@ -18,7 +18,8 @@ private:
 
     sf::RectangleShape background;
 
-    PauseMenu* pmenu;
+    GameMenu* pmenu;
+    GameMenu* gameovermenu;
 
     Player* player;
     Tetrix* tetrix;
@@ -36,10 +37,14 @@ private:
     void initVariables();
     void initPlayers();
 
+    void initGameoverMenu();
+
 
 public:
     GameState(StateData* state_data);
     virtual ~GameState();
+
+    void initGame();
 
     // Functions
     void updateView(const float& dt);

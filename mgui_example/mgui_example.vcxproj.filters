@@ -78,6 +78,9 @@
     <ClInclude Include="Tetrix.h">
       <Filter>Entity</Filter>
     </ClInclude>
+    <ClInclude Include="GameMenu.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="Tetrix.cpp">
       <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMenu.cpp">
+      <Filter>Gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
