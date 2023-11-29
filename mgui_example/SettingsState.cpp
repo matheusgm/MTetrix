@@ -43,7 +43,10 @@ void SettingsState::initGui()
 
 	// Apply selected settings
 	this->buttons["APPLY"]->onPressed([this] {
-
+		std::string soundValueString = this->soundValue.getString();
+		this->stateData->audioSettings->soundVolume = std::stof(soundValueString);
+		this->stateData->audioSettings->saveToFile("Config/audio.ini");
+		this->endState();
 		// TEST REMOVE LATER
 		//this->window->create(this->stateData->gfxSettings->resolution, this->stateData->gfxSettings->title, sf::Style::Default);
 
@@ -61,7 +64,7 @@ void SettingsState::initGui()
 	this->soundText.setFont(this->font);
 	
 
-	this->soundSlider = new gui::Slider(100.f, 100.f, 250.f, 16.f, 0, 100,0,5);
+	this->soundSlider = new gui::Slider(100.f, 100.f, 250.f, 16.f, 0, 100,this->stateData->audioSettings->soundVolume);
 	this->soundSlider->onValueChange(
 		[this] {this->soundValue.setString(std::to_string(this->soundSlider->getValue()) + "%"); }
 	);
