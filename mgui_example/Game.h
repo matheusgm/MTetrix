@@ -7,6 +7,7 @@ class Game{
 private:
     // Variables
     GraphicsSettings gfxSettings;
+    AudioSettings audioSettings;
     StateData stateData;
     sf::RenderWindow* window;
     sf::Event sfEvent;
@@ -23,6 +24,7 @@ private:
     // Initialization
     void initVariables();
     void initGraphicsSettings();
+    void initAudioSettings();
     void initWindow();
     void initKeys();
     void initStateData();

@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "GraphicsSettings.h"
+#include "AudioSettings.h"
 
 class Player;
 class GraphicsSettings;
@@ -14,6 +15,7 @@ struct StateData
 	float gridSize;
 	sf::RenderWindow* window;
 	GraphicsSettings* gfxSettings;
+	AudioSettings* audioSettings;
 	std::map<std::string, int>* supportedKeys;
 	std::stack<State*>* states;
 

@@ -81,6 +81,9 @@
     <ClInclude Include="GameMenu.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="AudioSettings.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="GameMenu.cpp">
       <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSettings.cpp">
+      <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

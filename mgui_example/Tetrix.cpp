@@ -29,6 +29,61 @@ void Tetrix::initShape()
 		this->gridArea.getPosition().y,
 		this->squareSize, this->squaresTexture, color / 2, color % 2, 128, 128, static_cast<shapes>(shape)
 	);
+	newShapeSound.play();
+}
+
+void Tetrix::initSounds()
+{
+	if (!rotateShapeSoundBuffer.loadFromFile("Resources/Sounds/Tetris/rotate_shape.wav")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_ROTATE_SHAPE_SOUND";
+	}
+	else
+	{
+		rotateShapeSound.setBuffer(rotateShapeSoundBuffer);
+	}
+	if (!newShapeSoundBuffer.loadFromFile("Resources/Sounds/Tetris/new_shape.wav")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_NEW_SHAPE_SOUND";
+	}
+	else
+	{
+		newShapeSound.setBuffer(newShapeSoundBuffer);
+	}
+	if (!lineClearedSoundBuffer.loadFromFile("Resources/Sounds/Tetris/line_cleared.wav")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_LINE_CLEARED_SOUND";
+	}
+	else
+	{
+		lineClearedSound.setBuffer(lineClearedSoundBuffer);
+	}
+	if (!shapeMoveSoundBuffer.loadFromFile("Resources/Sounds/Tetris/line_drop.wav")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_SHAPE_MOVE_SOUND";
+	}
+	else
+	{
+		shapeMoveSound.setBuffer(shapeMoveSoundBuffer);
+	}
+	if (!gameOverSoundBuffer.loadFromFile("Resources/Sounds/Tetris/gameover.mp3")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_GAMEOVER_SOUND";
+	}
+	else
+	{
+		gameOverSound.setBuffer(gameOverSoundBuffer);
+	}
+	if (!gameSoundBuffer.loadFromFile("Resources/Sounds/Tetris/tetris.mp3")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_GAME_SOUND";
+	}
+	else
+	{
+		gameSound.setBuffer(gameSoundBuffer);
+		gameSound.setLoop(true);
+	}
+	if (!pauseGameSoundBuffer.loadFromFile("Resources/Sounds/Tetris/pause.wav")) {
+		throw "ERROR::TETRIX::COULD_NOT_LOAD_PAUSE_GAME_SOUND";
+	}
+	else
+	{
+		pauseGameSound.setBuffer(pauseGameSoundBuffer);
+	}
 }
 
 void Tetrix::initSquareMatrix()
@@ -54,6 +109,18 @@ bool Tetrix::checkOverlap()
 			if (this->squaresMatrix[i][j] != NULL) return true;
 	}
 	return false;
+}
+
+void Tetrix::onPause()
+{
+	gameSound.pause();
+	pauseGameSound.play();
+}
+
+void Tetrix::onResume()
+{
+	gameSound.play();
+	this->restartTimer();
 }
 
 collide Tetrix::checkCollide()
@@ -118,6 +185,7 @@ void Tetrix::shapeActionFinished()
 
 	// Eliminate the completed lines and increment the pontuation
 	this->eliminateCompletedLines(linesCompleted);
+	if(!linesCompleted.empty()) lineClearedSound.play();
 
 	// Update position of line above the completed lines
 	this->updateMatrixAfterCompletedLines(linesCompleted);
@@ -135,6 +203,8 @@ void Tetrix::shapeActionFinished()
 	if (this->checkOverlap())
 	{
 		this->gameOver = true;
+		this->gameSound.stop();
+		this->gameOverSound.play();
 		this->onGameoverCallback();
 	}
 
@@ -145,7 +215,10 @@ Tetrix::Tetrix(sf::Texture squaresTexture, int rows, int columns, int squareSize
 {
 	this->initSquareMatrix();
 	this->initVariables();
+	this->initSounds();
 	this->initShape();
+
+	this->gameSound.play();
 
 	this->elapsed_time = sf::seconds(0.f);
 	this->delta_time = sf::seconds(0.5f);
@@ -222,6 +295,7 @@ void Tetrix::moveShapeDown()
 		this->tShape->move(0.f, -1.f);
 		this->shapeActionFinished();
 	}
+	else shapeMoveSound.play();
 }
 
 void Tetrix::moveShapeLeft()
@@ -233,6 +307,8 @@ void Tetrix::moveShapeLeft()
 	bool overlap = false;
 	if (left == 0) overlap = this->checkOverlap();
 	if (overlap || left != 0) this->tShape->move(1.f, 0.f);
+	else shapeMoveSound.play();
+
 }
 
 void Tetrix::moveShapeRight()
@@ -244,6 +320,7 @@ void Tetrix::moveShapeRight()
 	bool overlap = false;
 	if (right == 0) overlap = this->checkOverlap();
 	if (overlap || right != 0) this->tShape->move(-1.f, 0.f);
+	else shapeMoveSound.play();
 }
 
 void Tetrix::rotateShape(const float angle)
@@ -294,6 +371,9 @@ void Tetrix::rotateShape(const float angle)
 			this->tShape->rotate(-angle);
 		}
 	}
+
+	if (!overlap)
+		rotateShapeSound.play();
 }
 
 bool Tetrix::isLineFullComplete(int line)
@@ -354,6 +434,19 @@ sf::Vector2f Tetrix::getPosition()
 	return this->gridArea.getPosition();
 }
 
+void Tetrix::setSoundVolume(float value)
+{
+	if (value < 0 || value > 100) return;
+
+	this->gameSound.setVolume(value);
+	this->gameOverSound.setVolume(value);
+	this->rotateShapeSound.setVolume(value);
+	this->newShapeSound.setVolume(value);
+	this->lineClearedSound.setVolume(value);
+	this->shapeMoveSound.setVolume(value);
+	this->pauseGameSound.setVolume(value);
+}
+
 void Tetrix::onResizeWindow(sf::RenderWindow& new_window)
 {
 	sf::Vector2f diffShapeGridArea = this->tShape->getPosition() - this->gridArea.getPosition();
@@ -386,6 +479,7 @@ void Tetrix::update(const float& dt)
 	if (this->elapsed_time >= this->delta_time) // Tempo atingiu 1 segundo (delta time)
 	{
 		this->moveShapeDown();
+		this->shapeMoveSound.stop();
 		this->elapsed_time -= this->delta_time;
 	}
 

@@ -116,6 +116,8 @@ void GameState::initGame()
 	this->tetrix = new Tetrix(this->textures["TETRIX_SQUARES_SHEET"], 20, 10, 30);
 	this->tetrix->onGameover([this] { this->initGameoverMenu(); });
 
+	this->tetrix->setSoundVolume(this->stateData->audioSettings->soundVolume);
+
 	this->tetrixLevelValue.setString(std::to_string(this->tetrix->getLevel()));
 	this->tetrixScoreValue.setString(std::to_string(this->tetrix->getScore()));
 
@@ -137,10 +139,11 @@ void GameState::updateKeyboardInput(sf::Event& sfEvent)
 			{
 				if (!this->paused) {
 					this->pauseState();
+					this->tetrix->onPause();
 				}
 				else {
 					this->unpauseState();
-					this->tetrix->restartTimer();
+					this->tetrix->onResume();
 				}
 			}
 		}

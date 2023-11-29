@@ -17,6 +17,11 @@ void Game::initGraphicsSettings()
 	this->gfxSettings.loadFromFile("Config/graphics.ini");
 }
 
+void Game::initAudioSettings()
+{
+	this->audioSettings.loadFromFile("Config/audio.ini");
+}
+
 void Game::initWindow(){
 
 	/* Create a SFML window */
@@ -72,6 +77,7 @@ void Game::initStateData()
 {
 	this->stateData.window = this->window;
 	this->stateData.gfxSettings = &this->gfxSettings;
+	this->stateData.audioSettings = &this->audioSettings;
 	this->stateData.supportedKeys = &this->supportedKeys;
 	this->stateData.states = &this->states;
 	this->stateData.gridSize = this->gridSize;
@@ -87,6 +93,7 @@ void Game::initStates()
 Game::Game(){
 	this->initVariables();
 	this->initGraphicsSettings();
+	this->initAudioSettings();
 	this->initWindow();
 	this->initKeys();
 	this->initStateData();

@@ -31,10 +31,26 @@ private:
 	int score;
 	int linesCleared; // Level = 1 level a cada 10 lines cleared
 	bool gameOver;
+	sf::SoundBuffer gameSoundBuffer;
+	sf::SoundBuffer gameOverSoundBuffer;
+	sf::SoundBuffer lineClearedSoundBuffer;
+	sf::SoundBuffer newShapeSoundBuffer;
+	sf::SoundBuffer rotateShapeSoundBuffer;
+	sf::SoundBuffer shapeMoveSoundBuffer;
+	sf::SoundBuffer pauseGameSoundBuffer;
+
+	sf::Sound gameSound;
+	sf::Sound gameOverSound;
+	sf::Sound rotateShapeSound;
+	sf::Sound newShapeSound;
+	sf::Sound lineClearedSound;
+	sf::Sound shapeMoveSound;
+	sf::Sound pauseGameSound;
 
 	// Functions
 	void initVariables();
 	void initShape();
+	void initSounds();
 	void initSquareMatrix();
 	bool checkOverlap();
 	collide checkCollide();
@@ -51,6 +67,7 @@ public:
 	int getLevel();
 	int getScore();
 	sf::Vector2f getPosition();
+	void setSoundVolume(float value);
 
 	// Movement Functions
 	void moveShapeDown();
@@ -59,6 +76,8 @@ public:
 	void rotateShape(const float angle);
 
 	// Functions
+	void onPause();
+	void onResume();
 	bool isLineFullComplete(int line);
 	void onGameover(std::function<void()> callback);
 	void eliminateCompletedLines(std::vector<int> linesCompleted);
