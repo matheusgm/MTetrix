@@ -87,6 +87,18 @@
     <ClInclude Include="Button.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="ListView.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseGui.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Select.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Scroll.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -150,6 +162,18 @@
       <Filter>Gui</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="ListView.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseGui.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Select.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Scroll.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,6 +4,9 @@
 #include "State.h"
 #include "Slider.h"
 #include "Button.h"
+#include "ListView.h"
+#include "Select.h"
+#include "Scroll.h"
 
 class SettingsState :
     public State 
@@ -17,6 +20,15 @@ private:
     sf::Text soundText;
     gui::Slider* soundSlider;
     sf::Text soundValue;
+
+    // List View
+    gui::ListView* listView;
+
+    // Select
+    gui::Select* select;
+
+    // Scroll
+    gui::Scroll* scroll;
 
     //std::vector<sf::VideoMode> modes;
 

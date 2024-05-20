@@ -131,7 +131,6 @@ void gui::Slider::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 			}
 		}
 	}
-
 }
 
 void gui::Slider::update(const sf::Vector2f& mousePos)

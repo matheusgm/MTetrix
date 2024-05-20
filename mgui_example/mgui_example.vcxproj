@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AudioSettings.h" />
+    <ClInclude Include="BaseGui.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
@@ -140,10 +141,13 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsSettings.h" />
     <ClInclude Include="HitBoxComponent.h" />
+    <ClInclude Include="ListView.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Scroll.h" />
+    <ClInclude Include="Select.h" />
     <ClInclude Include="SettingsState.h" />
     <ClInclude Include="Slider.h" />
     <ClInclude Include="State.h" />
@@ -155,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AudioSettings.cpp" />
+    <ClCompile Include="BaseGui.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -162,11 +167,14 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GraphicsSettings.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
+    <ClCompile Include="ListView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Scroll.cpp" />
+    <ClCompile Include="Select.cpp" />
     <ClCompile Include="SettingsState.cpp" />
     <ClCompile Include="Slider.cpp" />
     <ClCompile Include="State.cpp" />

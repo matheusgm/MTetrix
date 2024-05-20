@@ -1,8 +1,11 @@
 #ifndef GUI_SLIDER_H
 #define GUI_SLIDER_H
+
+#include "BaseGui.h"
+
 namespace gui
 {
-	class Slider
+	class Slider : BaseGui
 	{
 	private:
 		sf::RectangleShape backgroundShape;
@@ -32,15 +35,21 @@ namespace gui
 		const sf::Vector2f& getSize() const;
 
 		// Modifier
-		void setPosition(const float x, const float y);
-		void setSize(const float width, const float height);
+		void setPosition(const float x, const float y) override;
+		void setSize(const float width, const float height) override;
 		void onValueChange(std::function<void()> callback);
 
 		// Functions
 		void updateIndicator();
-		void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos);
-		void update(const sf::Vector2f& mousePos);
-		void render(sf::RenderTarget& target);
+
+
+		// Herdado por meio de BaseGui
+		void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
+
+		void update(const sf::Vector2f& mousePos) override;
+
+		void render(sf::RenderTarget& target) override;
+
 	};
 }
 #endif

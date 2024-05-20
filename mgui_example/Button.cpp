@@ -102,7 +102,6 @@ const float gui::Button::getRight() const
 	return this->shape.getPosition().x + this->shape.getSize().x;
 }
 
-
 void gui::Button::setPosition(const float x, const float y)
 {
 	this->shape.setPosition(sf::Vector2f(x, y));

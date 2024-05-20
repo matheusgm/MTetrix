@@ -73,6 +73,15 @@ void SettingsState::initGui()
 	this->soundValue.setCharacterSize(32);
 	this->soundValue.setString(std::to_string(this->soundSlider->getValue()) + "%");
 	this->soundValue.setFont(this->font);
+
+	// LIST VIEW ====================================
+	this->listView = new gui::ListView(200.f, 200.f, 200.f, 300.f, &this->font);
+
+	// SELECT ====================================
+	this->select = new gui::Select(500.f, 200.f, 200.f, 100.f);
+
+	// SCROLL ====================================
+	this->scroll = new gui::Scroll(1000.f, 200.f, 20.f, 200.f, &this->font);
 }
 
 
@@ -96,6 +105,9 @@ SettingsState::~SettingsState()
 	}
 
 	delete this->soundSlider;
+	delete this->listView;
+	delete this->select;
+	delete this->scroll;
 }
 
 // Accessors
@@ -114,6 +126,12 @@ void SettingsState::updateEvents(sf::Event& sfEvent)
 		it.second->updateEvents(sfEvent, this->mousePosView);
 	}
 	this->soundSlider->updateEvents(sfEvent, this->mousePosView);
+
+	this->listView->updateEvents(sfEvent, this->mousePosView);
+
+	this->select->updateEvents(sfEvent, this->mousePosView);
+
+	this->scroll->updateEvents(sfEvent, this->mousePosView);
 }
 
 void SettingsState::onResizeWindow()
@@ -151,7 +169,9 @@ void SettingsState::updateGui(const float& dt)
 		it.second->update(this->mousePosView);
 	}
 	this->soundSlider->update(this->mousePosView);
-
+	this->listView->update(this->mousePosView);
+	this->select->update(this->mousePosView);
+	this->scroll->update(this->mousePosView);
 }
 
 void SettingsState::update(const float& dt)
@@ -170,6 +190,10 @@ void SettingsState::renderGui(sf::RenderTarget& target)
 	target.draw(this->soundText);
 	target.draw(this->soundValue);
 	this->soundSlider->render(target);
+
+	this->listView->render(target);
+	this->select->render(target);
+	this->scroll->render(target);
 
 }
 

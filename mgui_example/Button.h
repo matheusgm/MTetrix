@@ -1,10 +1,12 @@
 #ifndef GUI_BUTTON_H
 #define GUI_BUTTON_H
 
+#include "BaseGui.h"
+
 enum button_states { NORMAL = 0, HOVER, PRESSED, DISABLED };
 
 namespace gui {
-	class Button
+	class Button : BaseGui
 	{
 	private:
 		short unsigned buttonState;
@@ -54,17 +56,18 @@ namespace gui {
 		const float getRight() const;
 
 		// Modifier
-		void setPosition(const float x, const float y);
-		void setSize(const float width, const float height);
+		void setPosition(const float x, const float y) override;
+		void setSize(const float width, const float height) override;
 		void setText(const std::string text);
 		void setId(const short unsigned id);
 		void setDisabled(const bool disable);
 		void onPressed(std::function<void()> callback);
 
 		// Functions
-		void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos);
-		void update(const sf::Vector2f& mousePos);
-		void render(sf::RenderTarget& target);
+		// Herdado por meio de BaseGui
+		void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
+		void update(const sf::Vector2f& mousePos) override;
+		void render(sf::RenderTarget& target) override;
 	};
 }
 #endif
