@@ -2,7 +2,7 @@
 #define MAINMENUSTATE_H
 #include "GameState.h"
 #include "SettingsState.h"
-#include "Gui.h"
+#include "Button.h"
 
 class MainMenuState :
     public State

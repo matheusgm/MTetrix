@@ -1,7 +1,6 @@
 #ifndef PAUSEMENU_H
 #define PAUSEMENU_H
 
-#include "Gui.h"
 #include "GameMenu.h"
 
 class PauseMenu :

@@ -1,7 +1,7 @@
 #ifndef GAMEMENU_H
 #define GAMEMENU_H
 
-#include "Gui.h"
+#include "Button.h"
 
 class GameMenu
 {
