@@ -15,6 +15,8 @@ namespace gui {
         sf::RectangleShape indicatorShape;
         bool indicatorPressed;
 
+        std::function<void()> onValueChangeCallback;
+
         int minValue = 0;
         int maxValue = 100;
         int step = 1;
@@ -26,11 +28,15 @@ namespace gui {
         virtual ~Scroll();
 
         void updateIndicator();
-        bool globalBoundsContains(const sf::Vector2f& points);
+        void scrollWheel(int delta);
+        int getValue();
 
-        // Herdado por meio de BaseGui
         void setPosition(const float x, const float y) override;
         void setSize(const float width, const float height) override;
+        void onValueChange(std::function<void()> callback);
+        
+        // Herdado por meio de BaseGui
+        bool globalBoundsContains(const sf::Vector2f& points) override;
         void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
         void update(const sf::Vector2f& mousePos) override;
         void render(sf::RenderTarget& target) override;

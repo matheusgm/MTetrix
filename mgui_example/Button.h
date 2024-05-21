@@ -6,7 +6,7 @@
 enum button_states { NORMAL = 0, HOVER, PRESSED, DISABLED };
 
 namespace gui {
-	class Button : BaseGui
+	class Button : public BaseGui
 	{
 	private:
 		short unsigned buttonState;
@@ -48,12 +48,6 @@ namespace gui {
 		const bool isPressed() const;
 		const std::string getText() const;
 		const short unsigned& getId() const;
-		const sf::Vector2f& getPosition() const;
-		const sf::Vector2f& getSize() const;
-		const float getTop() const;
-		const float getBottom() const;
-		const float getLeft() const;
-		const float getRight() const;
 
 		// Modifier
 		void setPosition(const float x, const float y) override;
@@ -65,6 +59,7 @@ namespace gui {
 
 		// Functions
 		// Herdado por meio de BaseGui
+		bool globalBoundsContains(const sf::Vector2f& points) override;
 		void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
 		void update(const sf::Vector2f& mousePos) override;
 		void render(sf::RenderTarget& target) override;

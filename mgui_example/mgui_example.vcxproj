@@ -141,6 +141,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsSettings.h" />
     <ClInclude Include="HitBoxComponent.h" />
+    <ClInclude Include="ListItem.h" />
     <ClInclude Include="ListView.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MovementComponent.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GraphicsSettings.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
+    <ClCompile Include="ListItem.cpp" />
     <ClCompile Include="ListView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />

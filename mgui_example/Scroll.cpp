@@ -2,6 +2,7 @@
 #include "Scroll.h"
 
 gui::Scroll::Scroll(float x, float y, float width, float height, sf::Font* font)
+	: BaseGui(sf::Vector2f(x, y), sf::Vector2f(width, height))
 {
 	// Button Up
 	this->buttonUp = new Button(x, y, width, width, font, "^", 20);
@@ -9,6 +10,7 @@ gui::Scroll::Scroll(float x, float y, float width, float height, sf::Font* font)
 		[this] {
 			this->value--;
 			this->updateIndicator();
+			this->onValueChangeCallback();
 		}
 	);
 
@@ -18,20 +20,21 @@ gui::Scroll::Scroll(float x, float y, float width, float height, sf::Font* font)
 	this->shape.setOutlineColor(sf::Color::Black);
 
 	// Button Down
-	this->buttonDown = new Button(x, y + this->buttonUp->getSize().y + height - 2 * width, width, width, font, "v", 20);
+	this->buttonDown = new Button(x, height - width, width, width, font, "v", 20);
 	this->buttonDown->onPressed(
 		[this] {
 			this->value++;
 			this->updateIndicator();
+			this->onValueChangeCallback();
 		}
 	);
 
 	// Indicator
 	this->indicatorShape.setFillColor(sf::Color::Black);
-	this->indicatorShape.setPosition(sf::Vector2f(x, y + height / 2 - width));
-	this->indicatorShape.setSize(sf::Vector2f(width, width * 2));
 
 	this->indicatorPressed = false;
+
+	this->onValueChangeCallback = [] {};
 
 	this->setSize(width, height);
 	this->setPosition(x, y);
@@ -45,16 +48,29 @@ gui::Scroll::~Scroll()
 
 void gui::Scroll::setPosition(const float x, const float y)
 {
+	BaseGui::setPosition(sf::Vector2f(x,y));
+
 	this->buttonUp->setPosition(x, y);
 	this->shape.setPosition(sf::Vector2f(x, y + this->buttonUp->getSize().y));
-	this->buttonDown->setPosition(x, y + this->buttonUp->getSize().y + this->shape.getSize().y);
+	this->buttonDown->setPosition(x, this->shape.getPosition().y + this->shape.getSize().y);
+
+	this->updateIndicator();
 }
 
 void gui::Scroll::setSize(const float width, const float height)
 {
+	BaseGui::setSize(sf::Vector2f(width, height));
+
 	this->buttonUp->setSize(width, width);
-	this->buttonDown->setSize(width, width);
 	this->shape.setSize(sf::Vector2f(width, height - 2 * width));
+	this->buttonDown->setSize(width, width);
+
+	this->indicatorShape.setSize(sf::Vector2f(width, width * 2));
+}
+
+void gui::Scroll::onValueChange(std::function<void()> callback)
+{
+	this->onValueChangeCallback = callback;
 }
 
 void gui::Scroll::updateIndicator()
@@ -85,6 +101,17 @@ bool gui::Scroll::globalBoundsContains(const sf::Vector2f& points)
 	return this->shape.getGlobalBounds().contains(points);
 		/*|| this->buttonUp.getGlobalBounds().contains(points)
 		|| this->buttonDown.getGlobalBounds().contains(points);*/
+}
+
+void gui::Scroll::scrollWheel(int delta)
+{
+	this->value -= delta*this->step;
+	this->updateIndicator();
+}
+
+int gui::Scroll::getValue()
+{
+	return this->value;
 }
 
 void gui::Scroll::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
@@ -122,13 +149,13 @@ void gui::Scroll::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 				local_mouse_y = this->shape.getSize().y;
 
 			int new_val = static_cast<int>(local_mouse_y / interval_size) * this->step + this->minValue;
-			std::cout << new_val << std::endl;
+
 			// Only update if the value changes
 			if (new_val != this->value)
 			{
 				this->value = new_val;
 				this->updateIndicator();
-				//this->onValueChangeCallback();
+				this->onValueChangeCallback();
 			}
 		}
 	}
@@ -137,10 +164,7 @@ void gui::Scroll::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 	{
 		if (this->globalBoundsContains(mousePos))
 		{
-			int delta = sfEvent.mouseWheelScroll.delta;
-
-			this->value -= delta;
-			this->updateIndicator();
+			this->scrollWheel(static_cast<int>(sfEvent.mouseWheelScroll.delta));
 		}
 	}
 }

@@ -99,6 +99,9 @@
     <ClInclude Include="Scroll.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="ListItem.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -174,6 +177,9 @@
       <Filter>Gui</Filter>
     </ClCompile>
     <ClCompile Include="Scroll.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="ListItem.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@ gui::Button::Button(float x, float y, float width, float height,
 	sf::Color text_normal_color, sf::Color text_hover_color, sf::Color text_pressed_color,
 	sf::Color normal_color, sf::Color hover_color, sf::Color pressed_color,
 	sf::Color outline_normal_color, sf::Color outline_hover_color, sf::Color outline_pressed_color,
-	short unsigned id)
+	short unsigned id) : BaseGui(sf::Vector2f(x, y), sf::Vector2f(width, height))
 {
 	this->buttonState = NORMAL;
 	this->id = id;
@@ -72,48 +72,22 @@ const short unsigned& gui::Button::getId() const
 	return this->id;
 }
 
-const sf::Vector2f& gui::Button::getPosition() const
-{
-	return this->shape.getPosition();
-}
-
-const sf::Vector2f& gui::Button::getSize() const
-{
-	return this->shape.getGlobalBounds().getSize();
-}
-
-const float gui::Button::getTop() const
-{
-	return this->shape.getPosition().y;
-}
-
-const float gui::Button::getBottom() const
-{
-	return this->shape.getPosition().y + this->shape.getSize().y;
-}
-
-const float gui::Button::getLeft() const
-{
-	return this->shape.getPosition().x;
-}
-
-const float gui::Button::getRight() const
-{
-	return this->shape.getPosition().x + this->shape.getSize().x;
-}
-
 void gui::Button::setPosition(const float x, const float y)
 {
-	this->shape.setPosition(sf::Vector2f(x, y));
+	BaseGui::setPosition(sf::Vector2f(x, y));
+
+	this->shape.setPosition(this->getPosition());
 	this->text.setPosition(
-		this->shape.getPosition().x + (this->shape.getSize().x / 2.f) - (this->text.getGlobalBounds().width / 2.f),
-		this->shape.getPosition().y + (this->shape.getSize().y / 2.f) - (this->text.getGlobalBounds().height / 2.f) - (10.f / 2.f)
+		this->getPosition().x + (this->getSize().x / 2.f) - (this->text.getGlobalBounds().width / 2.f),
+		this->getPosition().y + (this->getSize().y / 2.f) - (this->text.getGlobalBounds().height / 2.f) - (10.f / 2.f)
 	);
 }
 
 void gui::Button::setSize(const float width, const float height)
 {
-	this->shape.setSize(sf::Vector2f(width, height));
+	BaseGui::setSize(sf::Vector2f(width, height));
+
+	this->shape.setSize(this->getSize());
 }
 
 // Modifier
@@ -141,6 +115,11 @@ void gui::Button::onPressed(std::function<void()> callback)
 }
 
 // Functions
+
+bool gui::Button::globalBoundsContains(const sf::Vector2f& points)
+{
+	return false;
+}
 
 void gui::Button::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 {

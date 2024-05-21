@@ -64,7 +64,7 @@ void SettingsState::initGui()
 	this->soundText.setFont(this->font);
 	
 
-	this->soundSlider = new gui::Slider(100.f, 100.f, 250.f, 16.f, 0, 100,this->stateData->audioSettings->soundVolume);
+	this->soundSlider = new gui::Slider(100.f, 100.f, 250.f, 16.f, 0, 100, static_cast<int>(this->stateData->audioSettings->soundVolume));
 	this->soundSlider->onValueChange(
 		[this] {this->soundValue.setString(std::to_string(this->soundSlider->getValue()) + "%"); }
 	);

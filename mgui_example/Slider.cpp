@@ -4,7 +4,7 @@
 gui::Slider::Slider(float x, float y, float width, float height,
 	int min_value, int max_value, int default_value, int step,
 	sf::Color background_color, sf::Color foreground_color, sf::Color indicator_color
-)
+) : BaseGui(sf::Vector2f(x, y), sf::Vector2f(width, height))
 {
 	this->minValue = min_value;
 	this->maxValue = max_value;
@@ -22,8 +22,6 @@ gui::Slider::Slider(float x, float y, float width, float height,
 	this->onValueChangeCallback = [] {};
 
 	// Background Shape
-
-	this->backgroundShape.setSize(sf::Vector2f(width, height));
 	this->backgroundShape.setFillColor(background_color);
 	this->backgroundShape.setOutlineThickness(1.f);
 	this->backgroundShape.setOutlineColor(sf::Color::Black);
@@ -37,8 +35,8 @@ gui::Slider::Slider(float x, float y, float width, float height,
 	this->indicatorShape.setOutlineThickness(1.f);
 	this->indicatorShape.setOutlineColor(sf::Color::Black);
 
+	this->setSize(width, height);
 	this->setPosition(x, y);
-
 }
 
 gui::Slider::~Slider()
@@ -50,22 +48,23 @@ const int gui::Slider::getValue() const
 	return this->value;
 }
 
-const sf::Vector2f& gui::Slider::getSize() const
-{
-	return this->backgroundShape.getGlobalBounds().getSize();
-}
-
 void gui::Slider::setPosition(const float x, const float y)
 {
-	this->backgroundShape.setPosition(sf::Vector2f(x, y));
-	this->foregroundShape.setPosition(this->backgroundShape.getPosition());
+	BaseGui::setPosition(sf::Vector2f(x, y));
+
+	this->backgroundShape.setPosition(this->getPosition());
+	this->foregroundShape.setPosition(this->getPosition());
+
 	// Mudar ao deslocar o indicator
 	this->updateIndicator();
 }
 
 void gui::Slider::setSize(const float width, const float height)
 {
-	this->backgroundShape.setSize(sf::Vector2f(width, height));
+	BaseGui::setSize(sf::Vector2f(width, height));
+
+	this->backgroundShape.setSize(this->getSize());
+
 	// Mudar ao deslocar o indicator
 	this->updateIndicator();
 }
@@ -79,14 +78,19 @@ void gui::Slider::updateIndicator()
 {
 	float value_perc = static_cast<float>(this->value - this->minValue) / static_cast<float>(this->maxValue - this->minValue);
 
-	this->foregroundShape.setSize(sf::Vector2f(this->backgroundShape.getSize().x * value_perc, this->backgroundShape.getSize().y));
+	this->foregroundShape.setSize(sf::Vector2f(this->getSize().x * value_perc, this->getSize().y));
 
 	this->indicatorShape.setPosition(
 		sf::Vector2f(
-			this->backgroundShape.getPosition().x - (this->indicatorShape.getGlobalBounds().width / 2.f) + (this->backgroundShape.getSize().x * value_perc),
-			this->backgroundShape.getPosition().y + (this->backgroundShape.getSize().y / 2.f) - (this->indicatorShape.getGlobalBounds().height / 2.f)
+			this->getPosition().x - (this->indicatorShape.getGlobalBounds().width / 2.f) + (this->getSize().x * value_perc),
+			this->getPosition().y + (this->getSize().y / 2.f) - (this->indicatorShape.getGlobalBounds().height / 2.f)
 		)
 	);
+}
+
+bool gui::Slider::globalBoundsContains(const sf::Vector2f& points)
+{
+	return false;
 }
 
 void gui::Slider::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
@@ -112,13 +116,13 @@ void gui::Slider::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 		}
 		else if (sfEvent.type == sf::Event::MouseMoved)
 		{
-			float interval_size = (this->backgroundShape.getSize().x / (static_cast<float>(this->maxValue - this->minValue) / this->step));
-			float local_mouse_x = mousePos.x - this->backgroundShape.getPosition().x + (interval_size / 2.f);
+			float interval_size = (this->getSize().x / (static_cast<float>(this->maxValue - this->minValue) / this->step));
+			float local_mouse_x = mousePos.x - this->getPosition().x + (interval_size / 2.f);
 
 			if (local_mouse_x <= 0.f)
 				local_mouse_x = 0.f;
-			else if (local_mouse_x >= this->backgroundShape.getSize().x)
-				local_mouse_x = this->backgroundShape.getSize().x;
+			else if (local_mouse_x >= this->getSize().x)
+				local_mouse_x = this->getSize().x;
 
 			int new_val = static_cast<int>(local_mouse_x / interval_size) * this->step + this->minValue;
 

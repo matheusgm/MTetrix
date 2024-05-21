@@ -21,6 +21,8 @@
 #include <cmath>
 #include <functional>
 
+using namespace std;
+
 // SFML
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>

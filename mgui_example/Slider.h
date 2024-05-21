@@ -16,7 +16,6 @@ namespace gui
 
 		std::function<void()> onValueChangeCallback;
 
-
 		int minValue;
 		int maxValue;
 		int step;
@@ -32,7 +31,6 @@ namespace gui
 
 		// Acessors
 		const int getValue() const;
-		const sf::Vector2f& getSize() const;
 
 		// Modifier
 		void setPosition(const float x, const float y) override;
@@ -42,14 +40,11 @@ namespace gui
 		// Functions
 		void updateIndicator();
 
-
 		// Herdado por meio de BaseGui
+		bool globalBoundsContains(const sf::Vector2f& points) override;
 		void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
-
 		void update(const sf::Vector2f& mousePos) override;
-
 		void render(sf::RenderTarget& target) override;
-
 	};
 }
 #endif
