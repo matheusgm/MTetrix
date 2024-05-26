@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "ListItem.h"
 
-gui::ListItem::ListItem()
+gui::ListItem::ListItem(sf::Color color)
 {
 	// Background Shape
-	this->shape.setFillColor(sf::Color::Red);
+	this->shape.setFillColor(color);
 	this->shape.setOutlineThickness(1.f);
 	this->shape.setOutlineColor(sf::Color::Black);
 
@@ -27,6 +27,11 @@ void gui::ListItem::setPosition(float x, float y)
 	this->position = sf::Vector2f(x, y);
 	this->shape.setPosition(this->position);
 	this->text.setPosition(this->position);
+}
+
+bool gui::ListItem::isInsideVerticalArea(float up, float down)
+{
+	return this->position.y + this->size.y > up and this->position.y  < down;
 }
 
 void gui::ListItem::setSize(float x, float y)

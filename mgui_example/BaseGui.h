@@ -22,6 +22,8 @@ namespace gui
 		const float getBottom() const;
 		const float getLeft() const;
 		const float getRight() const;
+		const float getWidth() const;
+		const float getHeight() const;
 
 		// Modifier
 		void setPosition(sf::Vector2f position);

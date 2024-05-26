@@ -23,7 +23,8 @@ gui::Button::Button(float x, float y, float width, float height,
 
 	// Text
 	this->text.setString(text);
-	this->text.setFont(*this->font);
+	if (this->font != nullptr)
+		this->text.setFont(*this->font);
 	this->text.setFillColor(text_normal_color);
 	this->text.setCharacterSize(character_size);
 

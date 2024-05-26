@@ -10,15 +10,20 @@ namespace gui
 	class ListView : BaseGui
 	{
 	private:
+		sf::View renderView;
 		sf::RectangleShape backgroundShape;
 
 		Scroll* scroll;
+		float scrollbarWidth = 10.f;
 
 		vector<ListItem*> elements;
 
 	public:
-		ListView(float x, float y, float width, float height, sf::Font* font);
+		ListView(float x, float y, float width, float height);
 		virtual ~ListView();
+
+		void initElements();
+		void initScroll();
 
 		void addListItem(ListItem* item);
 		void removeListItem(int pos);

@@ -31,6 +31,16 @@ const float gui::BaseGui::getRight() const
 	return this->position.x + this->size.x;
 }
 
+const float gui::BaseGui::getWidth() const
+{
+	return this->size.x;
+}
+
+const float gui::BaseGui::getHeight() const
+{
+	return this->size.y;
+}
+
 void gui::BaseGui::setPosition(sf::Vector2f position)
 {
 	this->position = position;

@@ -75,13 +75,13 @@ void SettingsState::initGui()
 	this->soundValue.setFont(this->font);
 
 	// LIST VIEW ====================================
-	this->listView = new gui::ListView(200.f, 200.f, 200.f, 300.f, &this->font);
+	this->listView = new gui::ListView(200.f, 200.f, 200.f, 300.f);
 
 	// SELECT ====================================
 	this->select = new gui::Select(500.f, 200.f, 200.f, 100.f);
 
 	// SCROLL ====================================
-	this->scroll = new gui::Scroll(1000.f, 200.f, 20.f, 200.f, &this->font);
+	this->scroll = new gui::Scroll(1000.f, 200.f, 20.f, 200.f);
 }
 
 

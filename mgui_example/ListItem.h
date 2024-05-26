@@ -11,8 +11,10 @@ namespace gui
         sf::Vector2f size;
         sf::Vector2f position;
 
-        ListItem();
+        ListItem(sf::Color color = sf::Color::Red);
         virtual ~ListItem();
+
+        bool isInsideVerticalArea(float yUp, float yDown);
 
         void setPosition(float x, float y);
         void setSize(float x, float y);

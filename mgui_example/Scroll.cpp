@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "Scroll.h"
 
-gui::Scroll::Scroll(float x, float y, float width, float height, sf::Font* font)
+gui::Scroll::Scroll(float x, float y, float width, float height)
 	: BaseGui(sf::Vector2f(x, y), sf::Vector2f(width, height))
 {
 	// Button Up
-	this->buttonUp = new Button(x, y, width, width, font, "^", 20);
+	this->buttonUp = new Button(x, y, width, width, "^", 20);
 	this->buttonUp->onPressed(
 		[this] {
 			this->value--;
@@ -20,7 +20,7 @@ gui::Scroll::Scroll(float x, float y, float width, float height, sf::Font* font)
 	this->shape.setOutlineColor(sf::Color::Black);
 
 	// Button Down
-	this->buttonDown = new Button(x, height - width, width, width, font, "v", 20);
+	this->buttonDown = new Button(x, height - width, width, width, "v", 20);
 	this->buttonDown->onPressed(
 		[this] {
 			this->value++;
@@ -35,6 +35,8 @@ gui::Scroll::Scroll(float x, float y, float width, float height, sf::Font* font)
 	this->indicatorPressed = false;
 
 	this->onValueChangeCallback = [] {};
+
+	this->indicatorHeight = width * 2;
 
 	this->setSize(width, height);
 	this->setPosition(x, y);
@@ -65,7 +67,32 @@ void gui::Scroll::setSize(const float width, const float height)
 	this->shape.setSize(sf::Vector2f(width, height - 2 * width));
 	this->buttonDown->setSize(width, width);
 
-	this->indicatorShape.setSize(sf::Vector2f(width, width * 2));
+	this->indicatorShape.setSize(sf::Vector2f(width, this->indicatorHeight));
+}
+
+void gui::Scroll::setMinValue(int value)
+{
+	this->minValue = value;
+}
+
+void gui::Scroll::setMaxValue(int value)
+{
+	this->maxValue = value;
+}
+
+int gui::Scroll::getMinValue()
+{
+	return this->minValue;
+}
+
+int gui::Scroll::getMaxValue()
+{
+	return this->maxValue;
+}
+
+void gui::Scroll::setIndicatorHeight(float height)
+{
+	this->indicatorHeight = height;
 }
 
 void gui::Scroll::onValueChange(std::function<void()> callback)
@@ -107,6 +134,7 @@ void gui::Scroll::scrollWheel(int delta)
 {
 	this->value -= delta*this->step;
 	this->updateIndicator();
+	this->onValueChangeCallback();
 }
 
 int gui::Scroll::getValue()

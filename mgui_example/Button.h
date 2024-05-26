@@ -36,11 +36,14 @@ namespace gui {
 
 	public:
 		Button(float x, float y, float width, float height,
-			sf::Font* font, std::string text = "Text", unsigned character_size = 24,
+			sf::Font* font = nullptr, std::string text = "Text", unsigned character_size = 24,
 			sf::Color text_normal_color = sf::Color::Color(0, 0, 0, 255), sf::Color text_hover_color = sf::Color::Color(255, 255, 255, 255), sf::Color text_pressed_color = sf::Color::Color(200, 200, 200, 255),
 			sf::Color normal_color = sf::Color::Color(255, 255, 255, 255), sf::Color hover_color = sf::Color::Color(0, 0, 0, 255), sf::Color pressed_color = sf::Color::Color(60, 60, 60, 255),
 			sf::Color outline_normal_color = sf::Color::Color(0, 0, 0, 255), sf::Color outline_hover_color = sf::Color::Color(0, 0, 0, 255), sf::Color outline_pressed_color = sf::Color::Color(0, 0, 0, 255),
 			short unsigned id = 0);
+
+		Button(float x, float y, float width, float height, std::string text = "Text", unsigned character_size = 24)
+			: Button(x, y, width, height, nullptr, text, character_size) {};
 
 		virtual ~Button();
 
