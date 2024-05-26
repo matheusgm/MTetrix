@@ -18,6 +18,9 @@ namespace gui
 
 		vector<ListItem*> elements;
 
+		int elementsInside();
+		int elementsOutside();
+
 	public:
 		ListView(float x, float y, float width, float height);
 		virtual ~ListView();
@@ -28,6 +31,8 @@ namespace gui
 		void addListItem(ListItem* item);
 		void removeListItem(int pos);
 		void setListItemPosition(int value);
+
+		int totalElements();
 
 		// Modifier
 		void setPosition(const float x, const float y) override;

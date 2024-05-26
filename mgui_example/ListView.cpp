@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ListView.h"
 
+
 gui::ListView::ListView(float x, float y, float width, float maxHeight)
 	: BaseGui(sf::Vector2f(x, y), sf::Vector2f(width, maxHeight))
 {
@@ -21,6 +22,18 @@ gui::ListView::~ListView()
 	delete this->scroll;
 }
 
+int gui::ListView::elementsInside()
+{
+	if (this->elements.empty())
+		return 0;
+
+	return static_cast<int>(floor(getHeight() / this->elements.at(0)->getSize().y));
+}
+
+int gui::ListView::elementsOutside()
+{
+	return this->totalElements() - this->elementsInside();
+}
 void gui::ListView::initElements()
 {
 	this->elements.push_back(new ListItem());
@@ -41,14 +54,14 @@ void gui::ListView::initElements()
 
 void gui::ListView::initScroll()
 {
-	int elementosDentro = static_cast<int>(floor(this->getHeight() / this->elements.at(0)->getSize().y));
-	int elementosFora = this->elements.size() - elementosDentro;
+	int elementosDentro = this->elementsInside();
+	int elementosFora = this->elementsOutside();
 
 	if (elementosFora > 0)
 	{
 		this->scroll = new Scroll(this->getRight() - scrollbarWidth, this->getTop(), scrollbarWidth, this->getHeight());
 		this->scroll->setMaxValue(elementosFora);
-		this->scroll->setIndicatorHeight((elementosDentro / (float)this->elements.size()) * this->scroll->getHeight());
+		this->scroll->setIndicatorHeight((elementosDentro / (float)this->totalElements()) * this->scroll->getHeight());
 		this->scroll->onValueChange(
 			[this] { this->setListItemPosition(this->scroll->getValue()); }
 		);
@@ -75,6 +88,11 @@ void gui::ListView::setListItemPosition(int value)
 	}
 }
 
+int gui::ListView::totalElements()
+{
+	return this->elements.size();
+}
+
 void gui::ListView::setPosition(const float x, const float y)
 {
 	BaseGui::setPosition(sf::Vector2f(x, y));
@@ -88,13 +106,10 @@ void gui::ListView::setPosition(const float x, const float y)
 
 void gui::ListView::setSize(const float width, const float height)
 {
-	float newHeight = height;
-	int elementosDentro = static_cast<int>(floor(newHeight / this->elements.at(0)->getSize().y));
-	int elementosFora = this->elements.size() - elementosDentro;
-	if (elementosFora <= 0)
-		newHeight = this->elements.at(0)->getSize().y * this->elements.size();
+	BaseGui::setSize(sf::Vector2f(width, height));
 
-	BaseGui::setSize(sf::Vector2f(width, newHeight));
+	if (!this->elements.empty() && this->elementsOutside() <= 0)
+		BaseGui::setSize(sf::Vector2f(width, this->elements.at(0)->getSize().y * this->totalElements()));
 
 	this->backgroundShape.setSize(sf::Vector2f(this->getWidth() - scrollbarWidth, this->getHeight()));
 	if(this->scroll)
