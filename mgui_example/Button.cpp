@@ -127,7 +127,8 @@ void gui::Button::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 	// Disabled
 	if (this->buttonState != DISABLED) {
 		// Idle
-		this->buttonState = NORMAL;
+		if (!this->buttonPressed)
+			this->buttonState = NORMAL;
 		// Hover
 		if (this->shape.getGlobalBounds().contains(mousePos)) {
 			this->buttonState = HOVER;
@@ -147,12 +148,13 @@ void gui::Button::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 			if (sfEvent.type == sf::Event::MouseButtonReleased)
 			{
 				this->buttonPressed = false;
+				this->mouseReleased = true;
 				if (this->shape.getGlobalBounds().contains(mousePos))
 				{
 					this->buttonState = HOVER;
 					if (sfEvent.mouseButton.button == sf::Mouse::Left)
 					{
-						this->buttonState = NORMAL;
+						//this->buttonState = NORMAL;
 						this->onPressedCallback();
 					}
 				}
@@ -163,7 +165,13 @@ void gui::Button::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 
 void gui::Button::update(const sf::Vector2f& mousePos)
 {
-	// Update the booleans for hover and pressed
+	if (this->mouseReleased)
+	{
+		this->mouseReleased = false;
+		this->buttonState = NORMAL;
+		if (this->shape.getGlobalBounds().contains(mousePos))
+			this->buttonState = HOVER;
+	}
 
 	switch (this->buttonState)
 	{

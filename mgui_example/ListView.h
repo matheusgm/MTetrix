@@ -16,7 +16,8 @@ namespace gui
 		Scroll* scroll;
 		float scrollbarWidth = 10.f;
 
-		vector<ListItem*> elements;
+		vector<BaseGui*> elements;
+		float elementHeight = 50.f;
 
 		int elementsInside();
 		int elementsOutside();

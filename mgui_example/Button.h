@@ -34,6 +34,8 @@ namespace gui {
 		sf::Color outlinePressedColor;
 		sf::Color outlineDisabledColor;
 
+		bool mouseReleased = false;
+
 	public:
 		Button(float x, float y, float width, float height,
 			sf::Font* font = nullptr, std::string text = "Text", unsigned character_size = 24,
@@ -44,6 +46,8 @@ namespace gui {
 
 		Button(float x, float y, float width, float height, std::string text = "Text", unsigned character_size = 24)
 			: Button(x, y, width, height, nullptr, text, character_size) {};
+
+		Button() : Button(0.f, 0.f, 50.f, 50.f, nullptr) {};
 
 		virtual ~Button();
 

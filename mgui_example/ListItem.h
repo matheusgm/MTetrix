@@ -1,26 +1,24 @@
 #ifndef GUI_LISTITEM_H
 #define GUI_LISTITEM_H
-
+#include "BaseGui.h"
 namespace gui
 {
-    class ListItem
+    class ListItem : public BaseGui
     {
     public:
         sf::RectangleShape shape;
         sf::Text text;
-        sf::Vector2f size;
-        sf::Vector2f position;
 
         ListItem(sf::Color color = sf::Color::Red);
         virtual ~ListItem();
 
-        bool isInsideVerticalArea(float yUp, float yDown);
+        void setPosition(float x, float y) override;
+        void setSize(float x, float y) override;
 
-        void setPosition(float x, float y);
-        void setSize(float x, float y);
-        const sf::Vector2f& getSize() const;
-
-        void render(sf::RenderTarget& target);
+        bool globalBoundsContains(const sf::Vector2f& points) override;
+        void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
+        void update(const sf::Vector2f& mousePos) override;
+        void render(sf::RenderTarget& target) override;
     };
 }
 #endif

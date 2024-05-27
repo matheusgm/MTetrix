@@ -2,6 +2,7 @@
 #include "ListItem.h"
 
 gui::ListItem::ListItem(sf::Color color)
+	:BaseGui(sf::Vector2f(0.f, 0.f), sf::Vector2f(100.f, 50.f))
 {
 	// Background Shape
 	this->shape.setFillColor(color);
@@ -14,8 +15,8 @@ gui::ListItem::ListItem(sf::Color color)
 	this->text.setFillColor(sf::Color::White);
 	this->text.setCharacterSize(24);
 
-	this->setSize(100.f, 50.f);
-	this->setPosition(0.f, 0.f);
+	this->setSize(getWidth(), getHeight());
+	this->setPosition(getLeft(), getTop());
 }
 
 gui::ListItem::~ListItem()
@@ -24,29 +25,32 @@ gui::ListItem::~ListItem()
 
 void gui::ListItem::setPosition(float x, float y)
 {
-	this->position = sf::Vector2f(x, y);
-	this->shape.setPosition(this->position);
-	this->text.setPosition(this->position);
-}
-
-bool gui::ListItem::isInsideVerticalArea(float up, float down)
-{
-	return this->position.y + this->size.y > up and this->position.y  < down;
+	BaseGui::setPosition(sf::Vector2f(x, y));
+	this->shape.setPosition(this->getPosition());
+	this->text.setPosition(this->getPosition());
 }
 
 void gui::ListItem::setSize(float x, float y)
 {
-	this->size = sf::Vector2f(x, y);
-	this->shape.setSize(this->size);
-}
-
-const sf::Vector2f& gui::ListItem::getSize() const
-{
-	return this->size;
+	BaseGui::setSize(sf::Vector2f(x, y));
+	this->shape.setSize(this->getSize());
 }
 
 void gui::ListItem::render(sf::RenderTarget& target)
 {
 	target.draw(this->shape);
 	target.draw(this->text);
+}
+
+bool gui::ListItem::globalBoundsContains(const sf::Vector2f& points)
+{
+	return false;
+}
+
+void gui::ListItem::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
+{
+}
+
+void gui::ListItem::update(const sf::Vector2f& mousePos)
+{
 }

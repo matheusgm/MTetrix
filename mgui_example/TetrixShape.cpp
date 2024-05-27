@@ -3,7 +3,7 @@
 
 TetrixShape::TetrixShape(float x, float y, int square_size,
 	sf::Texture& texture, int start_frame_x, int start_frame_y, int width, int height,
-	shapes shape 
+	shapes shape
 ) : squareSize(square_size)
 {
 	// [0, 1]
@@ -17,10 +17,10 @@ TetrixShape::TetrixShape(float x, float y, int square_size,
 		squares_position = { 1, 3, 5, 7 };
 		break;
 	case J:
-		squares_position = {3, 5, 7, 6};
+		squares_position = { 3, 5, 7, 6 };
 		break;
 	case L:
-		squares_position = { 2, 3, 5, 7};
+		squares_position = { 2, 3, 5, 7 };
 		break;
 	case O:
 		squares_position = { 2, 3, 4, 5 };
@@ -47,7 +47,7 @@ TetrixShape::TetrixShape(float x, float y, int square_size,
 		this->squares.push_back(
 			new TetrixSquare(x + column * square_size, y + row * square_size, square_size, texture, start_frame_x, start_frame_y, width, height)
 		);
-		if (row < upperRow) upperRow = row;
+		if (row < upperRow) upperRow = (float)row;
 	}
 
 	// Top Left of 5
@@ -58,7 +58,7 @@ TetrixShape::TetrixShape(float x, float y, int square_size,
 
 TetrixShape::~TetrixShape()
 {
-	for (auto &s : this->squares)
+	for (auto& s : this->squares)
 	{
 		delete s;
 	}
@@ -118,14 +118,14 @@ void TetrixShape::rotate(const float angle)
 
 		old_center_x = s->getPosition().x + s->getGlobalBounds().getSize().x / 2.f;
 		old_center_y = s->getPosition().y + s->getGlobalBounds().getSize().y / 2.f;
-		
+
 		new_rect_center_x = new_rect.left + new_rect.width / 2.f;
 		new_rect_center_y = new_rect.top + new_rect.height / 2.f;
 
 		diff_x = static_cast<int>(round(new_rect_center_x - old_center_x));
 		diff_y = static_cast<int>(round(new_rect_center_y - old_center_y));
 
-		s->move(diff_x, diff_y);
+		s->move((float)diff_x, (float)diff_y);
 	}
 }
 
