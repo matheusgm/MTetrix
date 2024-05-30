@@ -31,7 +31,6 @@ gui::Button::Button(float x, float y, float width, float height,
 	this->setSize(width, height);
 	this->setPosition(x, y);
 
-
 	// Colors State
 	this->textNormalColor = text_normal_color;
 	this->textHoverColor = text_hover_color;
@@ -75,18 +74,18 @@ const short unsigned& gui::Button::getId() const
 
 void gui::Button::setPosition(const float x, const float y)
 {
-	BaseGui::setPosition(sf::Vector2f(x, y));
+	BaseGui::setPosition(x, y);
 
 	this->shape.setPosition(this->getPosition());
 	this->text.setPosition(
-		this->getPosition().x + (this->getSize().x / 2.f) - (this->text.getGlobalBounds().width / 2.f),
-		this->getPosition().y + (this->getSize().y / 2.f) - (this->text.getGlobalBounds().height / 2.f) - (10.f / 2.f)
+		this->getLeft() + (this->getWidth() / 2.f) - (this->text.getGlobalBounds().width / 2.f),
+		this->getTop() + (this->getHeight() / 2.f) - (this->text.getGlobalBounds().height / 2.f) - (10.f / 2.f)
 	);
 }
 
 void gui::Button::setSize(const float width, const float height)
 {
-	BaseGui::setSize(sf::Vector2f(width, height));
+	BaseGui::setSize(width, height);
 
 	this->shape.setSize(this->getSize());
 }
@@ -116,11 +115,6 @@ void gui::Button::onPressed(std::function<void()> callback)
 }
 
 // Functions
-
-bool gui::Button::globalBoundsContains(const sf::Vector2f& points)
-{
-	return false;
-}
 
 void gui::Button::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 {

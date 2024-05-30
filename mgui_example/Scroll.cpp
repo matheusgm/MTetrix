@@ -50,7 +50,7 @@ gui::Scroll::~Scroll()
 
 void gui::Scroll::setPosition(const float x, const float y)
 {
-	BaseGui::setPosition(sf::Vector2f(x,y));
+	BaseGui::setPosition(x,y);
 
 	this->buttonUp->setPosition(x, y);
 	this->shape.setPosition(sf::Vector2f(x, y + this->buttonUp->getSize().y));
@@ -61,7 +61,7 @@ void gui::Scroll::setPosition(const float x, const float y)
 
 void gui::Scroll::setSize(const float width, const float height)
 {
-	BaseGui::setSize(sf::Vector2f(width, height));
+	BaseGui::setSize(width, height);
 
 	this->buttonUp->setSize(width, width);
 	this->shape.setSize(sf::Vector2f(width, height - 2 * width));
@@ -121,13 +121,6 @@ void gui::Scroll::updateIndicator()
 			this->shape.getPosition().y + (this->shape.getSize().y - this->indicatorShape.getGlobalBounds().height) * value_perc
 		)
 	);
-}
-
-bool gui::Scroll::globalBoundsContains(const sf::Vector2f& points)
-{
-	return this->shape.getGlobalBounds().contains(points);
-		/*|| this->buttonUp.getGlobalBounds().contains(points)
-		|| this->buttonDown.getGlobalBounds().contains(points);*/
 }
 
 void gui::Scroll::scrollWheel(int delta)
@@ -190,7 +183,7 @@ void gui::Scroll::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 
 	if (sfEvent.type == sf::Event::MouseWheelScrolled)
 	{
-		if (this->globalBoundsContains(mousePos))
+		if (this->contains(mousePos))
 		{
 			this->scrollWheel(static_cast<int>(sfEvent.mouseWheelScroll.delta));
 		}

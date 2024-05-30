@@ -102,7 +102,7 @@ int gui::ListView::totalElements()
 
 void gui::ListView::setPosition(const float x, const float y)
 {
-	BaseGui::setPosition(sf::Vector2f(x, y));
+	BaseGui::setPosition(x, y);
 
 	this->backgroundShape.setPosition(this->getPosition());
 	if (this->scroll)
@@ -113,10 +113,10 @@ void gui::ListView::setPosition(const float x, const float y)
 
 void gui::ListView::setSize(const float width, const float height)
 {
-	BaseGui::setSize(sf::Vector2f(width, floor(height / this->elementHeight) * this->elementHeight));
+	BaseGui::setSize(width, floor(height / this->elementHeight) * this->elementHeight);
 
 	if (!this->elements.empty() && this->elementsOutside() <= 0)
-		BaseGui::setSize(sf::Vector2f(width, this->elementHeight * this->totalElements()));
+		BaseGui::setSize(width, this->elementHeight * this->totalElements());
 
 	this->backgroundShape.setSize(sf::Vector2f(this->getWidth() - scrollbarWidth, this->getHeight()));
 	if(this->scroll)
@@ -127,18 +127,13 @@ void gui::ListView::setSize(const float width, const float height)
 	}
 }
 
-bool gui::ListView::globalBoundsContains(const sf::Vector2f& points)
-{
-	return this->backgroundShape.getGlobalBounds().contains(points);
-}
-
 void gui::ListView::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)
 {
 	if (this->scroll) {
 		this->scroll->updateEvents(sfEvent, mousePos);
 		if (sfEvent.type == sf::Event::MouseWheelScrolled)
 		{
-			if (this->globalBoundsContains(mousePos))
+			if (this->contains(mousePos))
 			{
 				this->scroll->scrollWheel(static_cast<int>(sfEvent.mouseWheelScroll.delta));
 				this->setListItemPosition(this->scroll->getValue());
@@ -146,7 +141,7 @@ void gui::ListView::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePo
 		}
 	}
 	for (auto& it : this->elements) {
-		if (this->globalBoundsContains(it->getPosition()))
+		if (this->contains(it->getPosition()))
 			it->updateEvents(sfEvent, mousePos);
 	}
 }
@@ -157,7 +152,7 @@ void gui::ListView::update(const sf::Vector2f& mousePos)
 		this->scroll->update(mousePos);
 
 	for (auto& it : this->elements) {
-		if (this->globalBoundsContains(it->getPosition()))
+		if (this->contains(it->getPosition()))
 			it->update(mousePos);
 	}
 }
@@ -180,7 +175,7 @@ void gui::ListView::render(sf::RenderTarget& target)
 	target.setView(this->renderView);
 
 	for (auto& it : this->elements) {
-		if (this->globalBoundsContains(it->getPosition()) and it->getTop() < getBottom())
+		if (this->contains(it->getPosition()) and it->getTop() < getBottom())
 			it->render(target);
 	}
 

@@ -15,7 +15,6 @@ namespace gui
         void setPosition(float x, float y) override;
         void setSize(float x, float y) override;
 
-        bool globalBoundsContains(const sf::Vector2f& points) override;
         void updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos) override;
         void update(const sf::Vector2f& mousePos) override;
         void render(sf::RenderTarget& target) override;

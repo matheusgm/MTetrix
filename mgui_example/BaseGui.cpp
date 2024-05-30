@@ -1,52 +1,62 @@
 #include "stdafx.h"
 #include "BaseGui.h"
 
-const sf::Vector2f& gui::BaseGui::getPosition() const
+gui::BaseGui::BaseGui(sf::Vector2f position, sf::Vector2f size)
 {
-	return this->position;
+	this->rect = sf::FloatRect(position, size);
 }
 
-const sf::Vector2f& gui::BaseGui::getSize() const
+const sf::Vector2f gui::BaseGui::getPosition() const
 {
-	return this->size;
+	return this->rect.getPosition();
+}
+
+const sf::Vector2f gui::BaseGui::getSize() const
+{
+	return this->rect.getSize();
 }
 
 const float gui::BaseGui::getTop() const
 {
-	return this->position.y;
+	return this->rect.top;
 }
 
 const float gui::BaseGui::getBottom() const
 {
-	return this->position.y + this->size.y;
+	return this->rect.top + this->rect.height;
 }
 
 const float gui::BaseGui::getLeft() const
 {
-	return this->position.x;
+	return this->rect.left;
 }
 
 const float gui::BaseGui::getRight() const
 {
-	return this->position.x + this->size.x;
+	return this->rect.left + this->rect.width;
 }
 
 const float gui::BaseGui::getWidth() const
 {
-	return this->size.x;
+	return this->rect.width;
 }
 
 const float gui::BaseGui::getHeight() const
 {
-	return this->size.y;
+	return this->rect.height;
 }
 
-void gui::BaseGui::setPosition(sf::Vector2f position)
+void gui::BaseGui::setPosition(const float x, const float y)
 {
-	this->position = position;
+	this->rect = sf::FloatRect(sf::Vector2f(x,y), this->rect.getSize());
 }
 
-void gui::BaseGui::setSize(sf::Vector2f size)
+void gui::BaseGui::setSize(const float width, const float height)
 {
-	this->size = size;
+	this->rect = sf::FloatRect(this->rect.getPosition(), sf::Vector2f(width, height));
+}
+
+bool gui::BaseGui::contains(const sf::Vector2f& points)
+{
+	return this->rect.contains(points);
 }

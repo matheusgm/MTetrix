@@ -25,14 +25,14 @@ gui::ListItem::~ListItem()
 
 void gui::ListItem::setPosition(float x, float y)
 {
-	BaseGui::setPosition(sf::Vector2f(x, y));
+	BaseGui::setPosition(x, y);
 	this->shape.setPosition(this->getPosition());
 	this->text.setPosition(this->getPosition());
 }
 
 void gui::ListItem::setSize(float x, float y)
 {
-	BaseGui::setSize(sf::Vector2f(x, y));
+	BaseGui::setSize(x, y);
 	this->shape.setSize(this->getSize());
 }
 
@@ -40,11 +40,6 @@ void gui::ListItem::render(sf::RenderTarget& target)
 {
 	target.draw(this->shape);
 	target.draw(this->text);
-}
-
-bool gui::ListItem::globalBoundsContains(const sf::Vector2f& points)
-{
-	return false;
 }
 
 void gui::ListItem::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)

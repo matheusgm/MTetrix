@@ -50,7 +50,7 @@ const int gui::Slider::getValue() const
 
 void gui::Slider::setPosition(const float x, const float y)
 {
-	BaseGui::setPosition(sf::Vector2f(x, y));
+	BaseGui::setPosition(x, y);
 
 	this->backgroundShape.setPosition(this->getPosition());
 	this->foregroundShape.setPosition(this->getPosition());
@@ -61,7 +61,7 @@ void gui::Slider::setPosition(const float x, const float y)
 
 void gui::Slider::setSize(const float width, const float height)
 {
-	BaseGui::setSize(sf::Vector2f(width, height));
+	BaseGui::setSize(width, height);
 
 	this->backgroundShape.setSize(this->getSize());
 
@@ -86,11 +86,6 @@ void gui::Slider::updateIndicator()
 			this->getPosition().y + (this->getSize().y / 2.f) - (this->indicatorShape.getGlobalBounds().height / 2.f)
 		)
 	);
-}
-
-bool gui::Slider::globalBoundsContains(const sf::Vector2f& points)
-{
-	return false;
 }
 
 void gui::Slider::updateEvents(sf::Event& sfEvent, const sf::Vector2f& mousePos)

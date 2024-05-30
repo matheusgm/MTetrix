@@ -61,8 +61,8 @@ void GameMenu::setPosition(const float x, const float y)
 	for (auto& it : this->buttons) {
 		it.second->setPosition(
 			this->container.getPosition().x + (this->container.getSize().x / 2.f) - (it.second->getSize().x / 2.f),
-			this->container.getPosition().y + this->container.getSize().y - (it.second->getSize().y * (i+1)) - (20.f * i) - 30.f);
-		i++;
+			this->container.getPosition().y + this->container.getSize().y - (it.second->getSize().y * (i + 1)) - (20.f * i) - 30.f);
+			i++;
 	}
 }
 
